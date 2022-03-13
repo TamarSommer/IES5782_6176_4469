@@ -1,0 +1,98 @@
+package primitives;
+
+import static primitives.Util.isZero;
+
+public class Vector extends Point
+{
+    /*************** ctors *****************/
+    /**
+     * ctor that gets 1 parameter
+     * @param
+     */
+    public Vector(double d1,double d2,double d3){
+        super(d1,d2,d3);
+        if(Double3.ZERO.equals(new Double3(d1,d2,d3)))
+            throw new IllegalArgumentException("Can't create the zero vector");
+    }	/*************** get *****************/
+public Vector(Double3 d) {
+    super(d);
+    if(Double3.ZERO.equals(d))
+        throw new IllegalArgumentException("Can't create the zero vector");
+}
+
+    /**
+     * subtract the wanted vector from it's head
+     * @param v
+     * @return the vector
+     */
+    public Vector subtract (Vector v){
+        return this.subtract(v);
+    }
+    /*************** calculating functions *****************/
+    /**
+     * add the wanted vector to it's head
+     * @param v
+     * @return the new vector
+     */
+    public Vector add (Vector v){
+        return this.add(v);
+    }
+    /**
+     * @param
+     * @return the wanted vector by multipile each of it's coordinates by s
+     */
+    public Vector scale(double scl){
+        Vector v = new Vector(this.dpoint.d1*scl,this.dpoint.d2*scl,this.dpoint.d3*scl);
+        return v;
+    }
+    /**
+     * @param v
+     * @return the scallar
+     */
+    public double dotProduct(Vector v){
+        return this.dpoint.d1* v.dpoint.d1+this.dpoint.d2*v.dpoint.d2+this.dpoint.d3*v.dpoint.d3;
+    }
+
+    /**
+     * @param v
+     * @return a new vector of the cross product
+     */
+    public Vector crossProduct(Vector v) {
+        double x = this.dpoint.d2*v.dpoint.d3 - this.dpoint.d3*v.dpoint.d2;
+        double y = this.dpoint.d1*v.dpoint.d3-this.dpoint.d3*v.dpoint.d1;
+        double z = this.dpoint.d1*v.dpoint.d2-this.dpoint.d2*v.dpoint.d1;
+        Vector newv = new Vector(x,-y,z);
+        return newv;
+
+    }
+    public double lengthSquared() {
+        double dis = this.dpoint.d1*this.dpoint.d1+this.dpoint.d2*this.dpoint.d2+this.dpoint.d3*this.dpoint.d3;
+        return dis;
+    }
+    /**
+     * @return the length
+     */
+    public double length() {
+        double dis = lengthSquared();
+        return Math.sqrt(dis);
+    }
+    /*************** normalize *****************/
+    /**
+     * @return a new normalize vector
+     */
+    public Vector normalize() {
+        double dis = length();
+        Vector newv = new Vector(this.dpoint.d1/dis,this.dpoint.d2/dis,this.dpoint.d3/dis);
+        return newv;
+    }
+    /*************** admin *****************/
+    @Override
+    public boolean equals(Object obj)
+    {
+        return super.equals(obj);
+    }
+
+    @Override
+    public String toString() {return "Vector="+super.toString();}
+
+}
