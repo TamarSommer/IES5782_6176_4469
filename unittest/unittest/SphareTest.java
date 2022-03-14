@@ -23,11 +23,5 @@ class SphareTest {
         Vector v= p1.subtract(p).normalize();
 
         assertEquals(v, s.getNormal(p), "Bad normal to sphere");//regular case
-        // =============== Boundary Values Tests ==================
-        //
-        try {
-            new Sphere(p1,0).getNormal(p);//a case where the radius is 0, the ctor of sphere will throw an exception
-            fail("GetNormal() should throw an exception, but it failed");
-        } catch (Exception e) {}
     }
 }
