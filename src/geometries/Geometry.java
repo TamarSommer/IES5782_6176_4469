@@ -7,3 +7,4 @@ import primitives.Point;
 public interface Geometry {
     public primitives.Vector getNormal(Point p);
 }
+//
