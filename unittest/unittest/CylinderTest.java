@@ -14,6 +14,6 @@ class CylinderTest {
     @Test
     void getNormal() {
         // ============ Equivalence Partitions Tests ==============
-        CylinderTest
+
     }
 }

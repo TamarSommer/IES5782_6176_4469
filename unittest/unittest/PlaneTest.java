@@ -3,7 +3,10 @@ package unittest;
 import geometries.Plane;
 import org.junit.jupiter.api.Test;
 import primitives.Point;
+import primitives.Ray;
 import primitives.Vector;
+
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static primitives.Util.isZero;
@@ -46,6 +49,58 @@ class PlaneTest {
         fail("getNormal() should throw an exception - two points are identical");
         }catch (Exception e) {
         }
+    }
+    /**
+     * Test method for {@link geometries.Plane#findIntersections(primitives.Ray)}
+     */
+    @Test
+    public void findIntersections() {
+        try {
+            Plane pl = new Plane(new Vector(0, 0, -1), new Point(0, 0, -3));
+            Ray r;
+
+            // ============ Equivalence Partitions Tests ==============
+            // The Ray is neither orthogonal nor parallel to the plane
+            // TC01: the ray intersects the plane
+            r = new Ray(new Vector(2, 1, -1), new Point(1, 1, 0));
+            List<Point> result = pl.findIntersections(r);
+            assertEquals(List.of(new Point(7, 4, -3)), result);
+
+            // TC02: the ray does not intersect the plane
+            r = new Ray(new Vector(2, 1, 1), new Point(1, 1, 0));
+            result = pl.findIntersections(r);
+            assertEquals(null, result);
+
+            // =============== Boundary Values Tests ==================
+            // Ray is parallel to the plane
+            // TC03: the ray is included in the plane
+            r = new Ray(new Vector(2, 1, 0), new Point(1, 2, -3));
+            assertEquals(null, pl.findIntersections(r), "wrong intersection! the ray is parallel and included in the plane");
+            // TC04: the ray is not included in the plane
+            r = new Ray(new Vector(2, 1, 0),new Point(1, 2, -2));
+            assertEquals(null, pl.findIntersections(r), "wrong intersection! the ray is parallel and not included in the plane");
+
+            // Ray is orthogonal to the plane
+            // TC05: Ray starts before the plane
+            r = new Ray(new Vector(0, 0, -1), new Point(1, 1, 0));
+            assertEquals(List.of(new Point(1, 1, -3)), pl.findIntersections(r), "wrong intersection! the ray is orthogonal and starts before the plane");
+            // TC06: Ray starts in the plane
+            r = new Ray(new Vector(0, 0, -1), new Point(1, 1, -3));
+            assertEquals(null, pl.findIntersections(r), "wrong intersection! the ray is orthogonal and starts in the plane");
+            // TC07: Ray starts after the plane
+            r = new Ray(new Vector(0, 0, -1), new Point(1, 1, -4));
+            assertEquals(null, pl.findIntersections(r), "wrong intersection! the ray is orthogonal and starts after the plane");
+
+            // starting point is in the plane
+            // TC08: Starting point of the ray is on the plane, but the vector is not included in the plane
+            r = new Ray(new Vector(2, 1, -1), new Point(1, 1, -3));
+            assertEquals(null, pl.findIntersections(r), "wrong intersection! Starting point of the ray is on the plane, but the vector is not included in the plane");
+            // TC09: Starting point of the ray is equal to the point represents the plane- q0
+            r = new Ray(new Vector(2, 1, -1), new Point(0, 0, -3));
+            assertEquals(null, pl.findIntersections(r), "wrong intersection! Starting point of the ray is equal to the point represents the plane- q0");
+
+        }
+        catch(IllegalArgumentException e) {}
     }
 
 }

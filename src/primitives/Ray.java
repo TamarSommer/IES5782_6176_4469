@@ -17,6 +17,8 @@ public class Ray {
         p = p2;
         v = v2.normalize();
     }
+
+
     public Point getPoint(){return  this.p;}
     public Vector getVector(){return  this.v;}
     /*************** Admin *****************/

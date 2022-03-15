@@ -5,6 +5,8 @@ import primitives.Vector;
 
 import primitives.Point;
 
+import java.util.List;
+
 public class Cylinder extends Tube implements Geometry{
     double height;
     /*************** ctor *****************/
@@ -37,7 +39,12 @@ public class Cylinder extends Tube implements Geometry{
     }
 
     @Override
-    public String toString() {return "Cylinder [height=" + height + "]";}
+    public String toString() {return "Cylinder [height=" + height + "]";
+    }
 
+    @Override
+    public List<Point> findIntersections(Ray ray) {
+        return null;
+    }
 
 }

@@ -13,18 +13,18 @@ public class Point {
     {
         dpoint = d;
     }
-    /*	public double GetX()
+    	public double getD1()
         {
             return dpoint.d1;
         }
-        public double GetY()
+        public double getD2()
         {
             return dpoint.d2;
         }
-        public double GetZ()
+        public double getD3()
         {
             return dpoint.d3;
-        }*/
+        }
     @Override
     public boolean equals(Object obj) {
 

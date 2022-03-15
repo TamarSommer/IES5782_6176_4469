@@ -5,6 +5,8 @@ import primitives.Vector;
 import primitives.Point;
 import primitives.Ray;
 
+import java.util.List;
+
 public class Plane implements Geometry {
     Point q0;
     Vector normal;
@@ -80,4 +82,8 @@ public class Plane implements Geometry {
     }
 
 
+    @Override
+    public List<Point> findIntersections(Ray ray) {
+        return null;
+    }
 }
