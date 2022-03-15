@@ -3,7 +3,11 @@ package unittest;
 import org.junit.jupiter.api.Test;
 import primitives.*;
 import geometries.*;
+
+import java.util.List;
+
 import static org.junit.jupiter.api.Assertions.*;
+import static primitives.Util.isZero;
 
 /**
  * Unit tests for geometries.Sphare class
@@ -12,7 +16,7 @@ import static org.junit.jupiter.api.Assertions.*;
 class SphareTest {
 
     /**
-     * Test method for {@link geometries.Sphere#getNormal(primitives.Point3D)}.
+     * Test method for {@link geometries.Sphere#getNormal(primitives.Point)}.
      */
     @Test
     public void testGetNormal() {
