@@ -49,6 +49,12 @@ public class Ray {
         return true;
     }
 
+    public Point getPoint(double t)
+    {
+        Point tmp=new Point(p.dPoint.d1 ,p.dPoint.d2,p.dPoint.d3);
+        return isZero(t) ? p : tmp.add(v.scale(t));//takes the beginning of the ray and adds the vector*scalar point that we get.
+    }
+
     @Override
     public String toString()
     {

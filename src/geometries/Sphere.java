@@ -7,6 +7,8 @@ import primitives.Vector;
 
 import java.util.List;
 
+import static primitives.Util.isZero;
+
 public class Sphere implements Geometry {
     Point center;
     double radius;
@@ -20,7 +22,7 @@ public class Sphere implements Geometry {
      */
     public Sphere(Point center, double radius) {
         super();
-        if(Util.isZero(radius) || radius < 0)
+        if(isZero(radius) || radius < 0)
             throw new IllegalArgumentException("Zero or negative radius");
         this.center = center;
         this.radius = radius;
@@ -56,8 +58,34 @@ public class Sphere implements Geometry {
         return "Sphere [center=" + center + ", radius=" + radius + "]";
     }
 
+    /*************** intersections *****************/
+    /**
+     * @param ray
+     * @return a list of GeoPoints- intersections of the ray with the sphere, and this sphere
+     */
     @Override
-    public List<Point> findIntersections(Ray ray) {
-        return null;
+    public List<Point> findIntersections(Ray ray)
+    {
+        if (ray.getPoint().equals(center)) // if the begin of the ray in the center, the point, is on the radius
+            return List.of(ray.getPoint(radius));
+        Vector u = center.subtract(ray.getPoint());
+        double tM = Util.alignZero(ray.getVector().dotProduct(u));
+        double d = Util.alignZero(Math.sqrt(u.length()*u.length()- tM * tM));
+        double tH = Util.alignZero(Math.sqrt(radius*radius - d*d));
+        double t1 = Util.alignZero(tM+tH);
+        double t2 = Util.alignZero(tM-tH);
+        if (d > radius)
+            return null; // there are no instructions
+        if (t1 <=0 && t2<=0)
+            return null;
+        if (t1 > 0 && t2 >0)
+            return List.of(ray.getPoint(t1),ray.getPoint(t2));
+        if (t1 > 0)
+        {
+            return List.of(ray.getPoint(t1));
+        }
+        else
+            return List.of(ray.getPoint(t2));
+
     }
 }

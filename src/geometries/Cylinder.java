@@ -18,6 +18,8 @@ public class Cylinder extends Tube implements Geometry{
      */
     public Cylinder(double radius, Ray ray, double height) {
         super(ray, radius);
+        if (height<0)
+            throw new IllegalArgumentException("height must be bigger than zero");
         this.height = height;
     }
     /*************** calculating functions *****************/
