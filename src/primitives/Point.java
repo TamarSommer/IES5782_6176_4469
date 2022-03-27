@@ -13,15 +13,31 @@ public class Point {
     {
         dPoint = d;
     }
-    	//public double getD1()
-        //public double getD2()
-        //{
-        //    return dpoint.d2;
-        //}
-        //public double getD3()
-        //{
-        //    return dpoint.d3;
-        //}
+
+    /**
+     * @return d1
+     */
+    public double getD1()
+    {
+        return dPoint.d1;
+    }
+
+    /**
+     * @return d2
+     */
+    public double getD2()
+    {
+        return dPoint.d2;
+    }
+
+    /**
+     * @return d3
+     */
+    public double getD3()
+    {
+        return dPoint.d3;
+    }
+
     @Override
     public boolean equals(Object obj) {
 
