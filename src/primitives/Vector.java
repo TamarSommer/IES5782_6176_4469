@@ -26,7 +26,7 @@ public Vector(Double3 d) {
      * @return the vector
      */
     public Vector subtract (Vector v){
-        return this.subtract(v);
+        return (Vector) super.subtract(v);
     }
     /*************** calculating functions *****************/
     /**
@@ -35,7 +35,7 @@ public Vector(Double3 d) {
      * @return the new vector
      */
     public Vector add (Vector v){
-        return this.add(v);
+        return new Vector(super.add(v).dPoint);
     }
     /**
      * @param
