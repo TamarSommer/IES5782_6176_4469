@@ -10,7 +10,7 @@ import java.util.List;
 public class Tube implements Geometry {
     Ray axisRay;
     double radius;
-/*************** ctor *****************/
+/************** ctor *****************/
     /**
      * ctor that gets 2 parameters
      * @param axisRay

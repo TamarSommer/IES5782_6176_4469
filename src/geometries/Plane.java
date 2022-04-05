@@ -7,6 +7,8 @@ import primitives.Ray;
 
 import java.util.List;
 
+import static primitives.Util.isZero;
+
 public class Plane implements Geometry {
     Point q0;
     Vector normal;
@@ -51,7 +53,7 @@ public class Plane implements Geometry {
     @Override
     public Vector getNormal(Point p) {
         /*return new Vector(p.add(normal));*/
-        return normal;
+        return this.normal;
     }
 
     /*************** normalize *****************/
@@ -82,8 +84,37 @@ public class Plane implements Geometry {
     }
 
 
+    /*************** intersections *****************/
+    /**
+     * @param ray
+     * @return a list of GeoPoints- intersections of the ray with the plane, and this plane
+     */
     @Override
-    public List<Point> findIntersections(Ray ray) {
-        return null;
+    public List<Point> findIntersections(Ray ray)
+    {
+        try {
+            Vector vec=q0.subtract(ray.getPoint());//creating a new vector according to the point q0 and the starting point of the ray (P0)
+
+            double t=normal.dotProduct(vec);//dot product between the vector we created and the normal of the plane
+
+            if(isZero(normal.dotProduct(ray.getVector()))) //if the dot product equals 0 it means that the ray is parallel to the plane
+                return null;
+            t = t/(normal.dotProduct(ray.getVector()));
+
+            if(t==0) //if the distance between the p0-the start point of the ray and the plane is 0, its not counted in the intersections list
+                return null;//no intersections
+            else if(t > 0) // the ray crosses the plane
+            {
+                Point p=ray.getPoint(t);//get the new point on the ray, multiplied by the scalar t. p is the intersection point.
+                return List.of(new Point(p.dPoint));//if so, return the point- the intersection
+            }
+            else // the ray doesn't cross the plane
+                return null;
+        }
+        catch(Exception ex) //catch exceptions in the vector creation
+        {
+            return null;
+        }
     }
+
 }

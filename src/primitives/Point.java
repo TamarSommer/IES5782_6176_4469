@@ -4,27 +4,40 @@ import static primitives.Util.isZero;
 //point class
 //fuhh
 public class Point {
-    public final Double3 dpoint;
+    public final Double3 dPoint;
     public Point(double d1,double d2,double d3)
     {
-        dpoint = new Double3(d1,d2,d3);
+        dPoint = new Double3(d1,d2,d3);
     }
     public Point(Double3 d)
     {
-        dpoint = d;
+        dPoint = d;
     }
-    	public double getD1()
-        {
-            return dpoint.d1;
-        }
-        public double getD2()
-        {
-            return dpoint.d2;
-        }
-        public double getD3()
-        {
-            return dpoint.d3;
-        }
+
+    /**
+     * @return d1
+     */
+    public double getD1()
+    {
+        return dPoint.d1;
+    }
+
+    /**
+     * @return d2
+     */
+    public double getD2()
+    {
+        return dPoint.d2;
+    }
+
+    /**
+     * @return d3
+     */
+    public double getD3()
+    {
+        return dPoint.d3;
+    }
+
     @Override
     public boolean equals(Object obj) {
 
@@ -37,44 +50,38 @@ public class Point {
         Point p = (Point) obj;
         //if (this.dpoint.equals(dpoint.ZERO))
         //    return false;
-        return this.dpoint.equals((p.dpoint));
+        return this.dPoint.equals((p.dPoint));
     }
     @Override
     public String toString(){
-        return String.format("Point: "+ dpoint.toString());
+        return String.format("Point: "+ dPoint.toString());
     }
     //substrucing
     public Vector subtract(Point p2){
-        double x = this.dpoint.d1-p2.dpoint.d1;
-        double y = this.dpoint.d2-p2.dpoint.d2;
-        double z = this.dpoint.d3-p2.dpoint.d3;
-        Vector newVector = new Vector(x,y,z);
+        Vector newVector = new Vector(this.dPoint.subtract(p2.dPoint));
         return newVector;
     }
     //
     //add function
     public 	Point add (Point p2){
-        double x = p2.dpoint.d1+this.dpoint.d1;
-        double y = p2.dpoint.d2+this.dpoint.d2;
-        double z = p2.dpoint.d3+this.dpoint.d3;
-        Point newpoint = new Point(x,y,z);
-        return newpoint;
+        Point newPoint = new Point(this.dPoint.add(p2.dPoint));
+        return newPoint;
 
     }
     //add function
     public 	Point add (Vector v2){
-        double x = v2.dpoint.d1+this.dpoint.d1;
-        double y = v2.dpoint.d2+this.dpoint.d2;
-        double z = v2.dpoint.d3+this.dpoint.d3;
+        double x = v2.dPoint.d1+this.dPoint.d1;
+        double y = v2.dPoint.d2+this.dPoint.d2;
+        double z = v2.dPoint.d3+this.dPoint.d3;
         Point newpoint = new Point(x,y,z);
         return newpoint;
 
     }
     //distance function
     public double distanceSquared(Point p2){
-        double x = p2.dpoint.d1-this.dpoint.d1;
-        double y = p2.dpoint.d2-this.dpoint.d2;
-        double z = p2.dpoint.d3-this.dpoint.d3;
+        double x = p2.dPoint.d1-this.dPoint.d1;
+        double y = p2.dPoint.d2-this.dPoint.d2;
+        double z = p2.dPoint.d3-this.dPoint.d3;
         double dis = x*x+y*y+z*z;
         return dis;
     }
