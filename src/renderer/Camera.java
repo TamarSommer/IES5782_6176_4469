@@ -14,9 +14,34 @@ public class Camera {
     private Vector vRight;	//the right direction of camera
 
     //view plane:
-    private double width;	//the view plane's width
-    private double height;	//the view plane's height
-    private double distance;//the distance of the camera from the view plane
+    private double width =0;	//the view plane's width
+    private double height = 0;	//the view plane's height
+    private double distance = 0;//the distance of the camera from the view plane
+
+    private ImageWriter img;
+    private RayTracerBase rtb;
+
+    public Camera setImageWriter(ImageWriter img2)
+    {
+        img = img2;
+        return this;
+    }
+    public Camera setRayTracerBase(RayTracerBase rtb2)
+    {
+        rtb= rtb2;
+        return this;
+    }
+
+    public void renderImage()
+    {
+        if(p0==null||vTo ==null ||vUp ==null||vRight ==null ||width==0 ||height ==0||distance==0||img ==null||rtb ==null )
+            throw new UnsupportedOperationException("Wrong object intilisation");
+    }
+    public void printGrid(int interval, Color color)
+    {
+
+    }
+
 
     /* ************* Getters/Setters *******/
     /**

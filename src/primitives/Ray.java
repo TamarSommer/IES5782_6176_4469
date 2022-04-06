@@ -3,6 +3,8 @@ package primitives;
 import static primitives.Util.isZero;
 import  primitives.Vector;
 
+import java.util.List;
+
 public class Ray {
     Point p;
     Vector v;
@@ -26,6 +28,30 @@ public class Ray {
 
     public Point getPoint(){return  this.p;}
     public Vector getVector(){return  this.v;}
+    /**
+     * this function gets a list of (intersection) points,
+     * and returns the closest point from them to p0-beginning of this ray.
+     * @param points
+     * @return closestP
+     */
+    public Point findClosestPoint(List<Point> points)
+    {
+        if (points==null)//if the list is empty
+            return null;
+
+        Point closestP=points.get(0);			//take the 1st point in the beginning
+        double min=p.distance(points.get(0));
+
+        for(int i=0; i<points.size(); i++) 		//move on all the points
+        {
+            if (p.distance(points.get(i))<min) //change the closest point if the dis < min
+            {
+                min=p.distance(points.get(i));
+                closestP=points.get(i);
+            }
+        }
+        return closestP;					    //return is the closest point-with min distance from p0.
+    }
     /*************** Admin *****************/
     @Override
     public boolean equals(Object obj) {
@@ -65,6 +91,5 @@ public class Ray {
     {
         return "Ray [Point=" + p + ", Vector=" +v + "]";
     }
-
 
 }
