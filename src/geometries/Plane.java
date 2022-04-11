@@ -9,7 +9,7 @@ import java.util.List;
 
 import static primitives.Util.isZero;
 
-public class Plane implements Geometry {
+public class Plane extends Geometry {
     Point q0;
     Vector normal;
 

@@ -7,7 +7,7 @@ import primitives.Ray;
 
 import java.util.List;
 
-public class Tube implements Geometry {
+public class Tube extends Geometry {
     Ray axisRay;
     double radius;
 /************** ctor *****************/
@@ -68,6 +68,7 @@ public class Tube implements Geometry {
     public String toString() {
         return "Tube [axisRay=" + axisRay + ", radius=" + radius + "]";
     }
+    @Override
     public List<Point> findIntersections(Ray ray) {
         return null;
     }

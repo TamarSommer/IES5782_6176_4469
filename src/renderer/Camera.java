@@ -1,8 +1,11 @@
 package renderer;
 
-import primitives.*;
 
-import java.util.List;
+import primitives.*;
+import primitives.Vector;
+
+import java.util.*;
+import javax.swing.JFrame;
 
 import static primitives.Util.isZero;
 
@@ -14,10 +17,9 @@ public class Camera {
     private Vector vRight;	//the right direction of camera
 
     //view plane:
-    private double width =0;	//the view plane's width
-    private double height = 0;	//the view plane's height
-    private double distance = 0;//the distance of the camera from the view plane
-
+    private double width;	//the view plane's width
+    private double height;	//the view plane's height
+    private double distance;//the distance of the camera from the view plane
     private ImageWriter img;
     private RayTracerBase rtb;
 
@@ -28,20 +30,41 @@ public class Camera {
     }
     public Camera setRayTracerBase(RayTracerBase rtb2)
     {
-        rtb= rtb2;
+        this.rtb= rtb2;
+        return this;
+    }
+    public Camera setRayTracerBasic(RayTracerBasic tracer) {
+        this.rtb = tracer;
         return this;
     }
 
-    public void renderImage()
-    {
-        if(p0==null||vTo ==null ||vUp ==null||vRight ==null ||width==0 ||height ==0||distance==0||img ==null||rtb ==null )
-            throw new UnsupportedOperationException("Wrong object intilisation");
-    }
-    public void printGrid(int interval, Color color)
-    {
+    public void renderImage() {
+        if (img == null)
+            throw new java.util.MissingResourceException("ERROR - not all the fields of the object contain a value", "ImageWriter", "img");
+        if (rtb == null)
+            throw new java.util.MissingResourceException("ERROR - not all the fields of the object contain a value", "RayTracerBase", "rtb");
+        for (int i = 0; i < img.getNx(); i++) {
+            for (int j = 0; j < img.getNy(); j++) {
+                Ray ray = constructRayThroughPixel(img.getNx(), img.getNy(), j, i);
+                img.writePixel(j, i, rtb.traceRay(ray));
+            }
+        }
+
 
     }
+    public void  printGrid(int interval, Color color){
+        if (img == null)
+            throw new MissingResourceException("this function must have values in all the fileds", "ImageWriter", "imageWriter");
 
+        for (int i = 0; i < img.getNx(); i++)
+        {
+            for (int j = 0; j < img.getNy(); j++)
+            {
+                if(i % interval == 0 || j % interval == 0)
+                    img.writePixel(i, j, color);
+            }
+        }
+    }
 
     /* ************* Getters/Setters *******/
     /**
@@ -136,7 +159,44 @@ public class Camera {
         return this;
     }
 
+    /**
+     * The function is responsible for creating the rays from the camera
+     * @param nX int value - resolution of pixel in X
+     * @param nY int value - resolution of pixel in Y
+     * @param j int value - index of column
+     * @param i int value - index of row
+     * @return Ray that created
+     * @throws Exception
+     */
+    public Ray constructRayThroughPixel(int nX, int nY, int j, int i ) 	{
+        Point Pc;
+        if (Util.isZero(distance))
+            Pc=p0;
+        else
+            Pc=p0.add(vTo.scale(distance));
 
+        double Ry= height/nY;
+        double Rx=width/nX;
+        double Yi=(i-(nY-1)/2d)*Ry;
+        double Xj=(j-(nX-1)/2d)*Rx;
+
+        if(Util.isZero(Xj) && Util.isZero(Yi))
+            return new Ray (p0, Pc.subtract(p0));
+
+        Point Pij = Pc;
+
+        if(!Util.isZero(Xj))
+            Pij = Pij.add(vRight.scale(Xj));
+
+        if(!Util.isZero(Yi))
+            Pij = Pij.add(vUp.scale(-Yi));
+
+        Vector Vij = Pij.subtract(p0);
+
+        if(Pij.equals(p0))
+            return new Ray(p0, new Vector(Pij.getD1(),Pij.getD2(),Pij.getD3()));
+        return new Ray(p0, Vij);
+    }
     public Ray constructRay(int nX, int nY, int j, int i){
         if (isZero(distance)) //we assume that distance between camera and view plane must be > than 0.
         {
@@ -149,6 +209,7 @@ public class Camera {
 
         return new Ray(p0, Vij);//create the ray
     }
+
     public Point getCenterOfPixel(int nX, int nY, int j, int i)
     {
         Point Pc = p0.add(vTo.scale(distance));//Pc is the center point in view plane. exactly in front of camera- vTo.
@@ -178,5 +239,9 @@ public class Camera {
         //now Pij is the center of the wanted pixel
         return Pij;
     }
-
+    public void writeToImage(){
+        if (img == null)
+            throw new java.util.MissingResourceException("ERROR - not all the fields of the object contain a value", "ImageWriter", "img");
+        img.writeToImage();
+    }
 }
