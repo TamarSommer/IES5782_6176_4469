@@ -7,7 +7,7 @@ import primitives.Point;
 
 import java.util.List;
 
-public class Cylinder extends Tube implements Geometry{
+public class Cylinder extends Tube {
     double height;
     /*************** ctor *****************/
     /**

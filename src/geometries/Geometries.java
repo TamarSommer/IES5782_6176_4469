@@ -11,7 +11,7 @@ import java.util.ArrayList;
  * but it does implement "Intersectable interface" because we want to check the intersections with all the geometries we have.
  * @author efrat & esti
  */
-public class Geometries implements Intersectable
+public class Geometries extends Intersectable
 {
     private List<Intersectable> geometries; //list of geometries- all implement intersactable interface
 
