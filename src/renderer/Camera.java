@@ -65,7 +65,7 @@ public class Camera {
         _vTo = vTo.normalize();
         _vUp = vUp.normalize();
 
-        _vRight = _vTo.crossProduct(vUp);
+        _vRight = _vTo.crossProduct(vUp).normalize();
     }
 
     // chaining methods

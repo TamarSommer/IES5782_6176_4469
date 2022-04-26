@@ -1,79 +1,61 @@
 package geometries;
 
-import primitives.*;
+
+import primitives.Ray;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
+import primitives.Point;
 
-public interface Intersectable {
-    /** find all intersection points from the array
-     * @param r ray pointing towards graphic object
-     * @return immutable list of intersection points {@link Point}
-     */
-    List<Point> findIntersections(Ray r);
-}
+public abstract class Intersectable {
 
-/*public abstract class Intersectable {
-    public abstract List<Point> findIntersections(Ray ray){
-        List<Intersectable.GeoPoint> geoList = this.findGeoIntersections(ray);
-        return geoList == null ? null : (List)geoList.stream().map((gp) -> {
-            return gp.point;
-        }).collect(Collectors.toList()); }
     /**
-     * The class GeoPoint contains Geometry and Point
-     * @author Dvori and Tamar
+     * A function that return all the intersection point with geometry
      *
-     */
-    /*public static class GeoPoint {
+     * @param ray
+     * @return List<Point>
+     * @throws Exception
+     * */
+    public List<Point> findIntersections(Ray ray) {
+        var geoList = findGeoIntersections(ray);
+        return geoList == null ? null
+                : geoList.stream().map(gp -> gp.point).toList();
+    }
+
+    public static class GeoPoint {
         public Geometry geometry;
         public Point point;
 
+        @Override
+        public String toString() {
+            return "GeoPoint [geometry=" + geometry + ", point=" + point + "]";
+        }
         /**
-         * Constructor of GeoPoint
-         * @param geometry
-         * @param point
-         */
-        /*public GeoPoint(Geometry geometry, Point point) {
+         * constructor for geo point
+         *
+         * @param geometry Geometry
+         * @param point Point3D
+         * */
+        public GeoPoint(Geometry geometry,Point point)
+        {
             this.geometry = geometry;
             this.point = point;
         }
-        public String toString() {
-            return "GP{G=" + this.geometry + ", P=" + this.point + '}';
+        @Override
+        public boolean equals(Object obj) {
+            if (this == obj) return true;
+            if (obj == null) return false;
+            if (!(obj instanceof GeoPoint)) return false;
+            GeoPoint other = (GeoPoint)obj;
+            return this.geometry== other.geometry && this.point.equals(other.point);
         }
 
-        public boolean equals(Object obj) {
-            if (this == obj) {
-                return true;
-            } else if (obj == null) {
-                return false;
-            } else if (this.getClass() != obj.getClass()) {
-                return false;
-            } else {
-                Intersectable.GeoPoint other = (Intersectable.GeoPoint)obj;
-                if (this.geometry == null) {
-                    if (other.geometry != null) {
-                        return false;
-                    }
-                } else if (!this.geometry.equals(other.geometry)) {
-                    return false;
-                }
+    }
+    public List<GeoPoint> findGeoIntersections (Ray ray){
+        return findGeoIntersectionsHelper(ray);
+    }
+    protected abstract List<GeoPoint> findGeoIntersectionsHelper(Ray ray);//{
+    //	return null;
+    //}
 
-                if (this.point == null) {
-                    if (other.point != null) {
-                        return false;
-                    }
-                } else if (!this.point.equals(other.point)) {
-                    return false;
-                }
-
-                return true;
-            }
-        }*/
-        //public abstract List<GeoPoint> findGeoIntersections(Ray ray){this.findGeoIntersectionsHelper(ray);}
-        //protected abstract List<GeoPoint> findGeoIntersectionsHelper(Ray ray);
-   // }
-
-
-
-//}
+}
