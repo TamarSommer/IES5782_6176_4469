@@ -4,7 +4,7 @@ import primitives.Color;
 import primitives.Double3;
 
 public class AmbientLight {
-    Color intensity;
+    private final Color intensity;
 
     /*************** ctor *****************/
     /**

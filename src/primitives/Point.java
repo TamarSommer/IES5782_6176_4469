@@ -1,9 +1,14 @@
 package primitives;
 
+import java.util.Objects;
+
 import static primitives.Util.isZero;
 //point class
 //fuhh
 public class Point {
+
+
+    public static final Point ZERO =  new Point(0,0,0);
     public final Double3 dPoint;
     public Point(double d1,double d2,double d3)
     {
@@ -53,6 +58,10 @@ public class Point {
         return this.dPoint.equals((p.dPoint));
     }
     @Override
+    public int hashCode() {
+        return Objects.hash(dPoint);
+    }
+    @Override
     public String toString(){
         return String.format("Point: "+ dPoint.toString());
     }
@@ -79,16 +88,17 @@ public class Point {
     }
     //distance function
     public double distanceSquared(Point p2){
-        double x = p2.dPoint.d1-this.dPoint.d1;
-        double y = p2.dPoint.d2-this.dPoint.d2;
-        double z = p2.dPoint.d3-this.dPoint.d3;
-        double dis = x*x+y*y+z*z;
-        return dis;
+        return (this.dPoint.d1 - p2.dPoint.d1) * (this.dPoint.d1 - p2.dPoint.d1) +
+                (this.dPoint.d2 - p2.dPoint.d2) * (this.dPoint.d2 - p2.dPoint.d2) +
+                (this.dPoint.d3 - p2.dPoint.d3) * (this.dPoint.d3 - p2.dPoint.d3);
     }
     public double distance(Point p)	{
         double  dis = distanceSquared(p);
         dis = Math.sqrt(dis);
         return dis;
     }
+
+
+
 
 }

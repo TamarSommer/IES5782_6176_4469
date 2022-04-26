@@ -40,7 +40,7 @@ public class IntegrationTests
         {
             for (int j = 0; j < Ny; ++j) //for each index of height
             {
-                Ray ray = cam.setVpSize(3,3).setVpDistance(1).constructRay(Nx,Ny,j,i);//3x3. create ray through the pixel
+                Ray ray = cam.setVPSize(3,3).setVPDistance(1).constructRay(Nx,Ny,j,i);//3x3. create ray through the pixel
                 results = geometry.findIntersections(ray);//calculate all intersections of a ray and the geometry
                 if (results != null)					  //if there are intersections of the specific ray with the geometry
                     count += results.size();			  //add the number of intersections to the general counter of intersections with the specific geometry.
