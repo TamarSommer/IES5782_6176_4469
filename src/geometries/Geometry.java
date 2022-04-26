@@ -5,7 +5,7 @@ import primitives.Vector;
 
 import primitives.Point;
 
-public abstract class Geometry extends Intersectable {
+public abstract class Geometry implements Intersectable {
     public abstract primitives.Vector getNormal(Point p);
 
     protected Color emission =  Color.BLACK;;

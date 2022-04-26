@@ -1,11 +1,10 @@
 package unittest;
 
-import static org.junit.jupiter.api.Assertions.*;
-
+import renderer.*;
 import org.junit.jupiter.api.Test;
-
-import renderer.Camera;
 import primitives.*;
+
+import static org.junit.jupiter.api.Assertions.*;
 
 /**
  * Testing Camera Class
@@ -18,11 +17,12 @@ class CameraTest {
 
     /**
      * Test method for
-     * .
+     * {@link Camera#constructRay(int, int, int, int)}.
      */
     @Test
     void testConstructRay() {
-        Camera camera = new Camera(ZERO_POINT, new Vector(0, 0, -1), new Vector(0, -1, 0)).setVpDistance(10);
+        Camera camera = new Camera(ZERO_POINT, new Vector(0, 0, -1), new Vector(0, -1, 0))
+                .setVpDistance(10);
         String badRay = "Bad ray";
 
         // ============ Equivalence Partitions Tests ==============

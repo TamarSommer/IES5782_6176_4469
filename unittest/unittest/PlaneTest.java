@@ -39,6 +39,7 @@ class PlaneTest {
             new Plane(new Point(1,2,3),new Point(2,4,6),new Point(4,8,12)).getNormal();
             fail("GetNormal() should throw an exception, but it failed");
         } catch (Exception e) {}
+      //  System.out.print("well done");
     }
     @Test
     public void findIntersections() {

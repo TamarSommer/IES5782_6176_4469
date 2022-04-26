@@ -35,7 +35,7 @@ public class Plane extends Geometry {
         this.q0 = p1;
         Vector v1 = (p2.subtract(p3));
         Vector v2 = (p1.subtract(p3));
-        this.normal = v1.crossProduct(v2).normalize();
+        this.normal = v2.crossProduct(v1).normalize();
     }
     /*************** get *****************/
     /**
