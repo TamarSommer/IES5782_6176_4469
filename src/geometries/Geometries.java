@@ -9,7 +9,7 @@ import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 
-public class Geometries implements Intersectable {
+public class Geometries extends Intersectable {
 
     List<Intersectable> _intersectablesList;
 
@@ -31,11 +31,28 @@ public class Geometries implements Intersectable {
 //    }
 
     @Override
-    public List<Point> findIntersections(Ray ray) {
-        List<Point> result = null;
+    public List<GeoPoint> findIntersections(Ray ray) {
+        List<GeoPoint> result = null;
         for (Intersectable item : _intersectablesList) {
             //get intersections points of a particular item from _intersectables
-            List<Point> itemPoints = item.findIntersections(ray);
+            List<GeoPoint> itemPoints = item.findGeoIntersections(ray);
+            if (itemPoints != null) {
+                //first time initialize result to new LinkedList
+                if (result == null) {
+                    result = new LinkedList<>();
+                }
+                //add all item points to the resulting list
+                result.addAll(itemPoints);
+            }
+        }
+        return result;
+    }
+
+    public List<GeoPoint> findGeoIntersectionsHelper(Ray ray) {
+        List<GeoPoint> result = null;
+        for (Intersectable item : _intersectablesList) {
+            //get intersections points of a particular item from _intersectables
+            List<GeoPoint> itemPoints = item.findGeoIntersections(ray);
             if (itemPoints != null) {
                 //first time initialize result to new LinkedList
                 if (result == null) {

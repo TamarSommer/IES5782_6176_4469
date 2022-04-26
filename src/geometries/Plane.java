@@ -9,7 +9,7 @@ import java.util.List;
 
 import static primitives.Util.isZero;
 
-public class Plane implements Geometry {
+public class Plane extends Geometry {
     final Point q0;
     final Vector normal;
 
@@ -96,24 +96,23 @@ public class Plane implements Geometry {
      * @return a list of GeoPoints- intersections of the ray with the plane, and this plane
      */
     @Override
-    public List<Point> findIntersections(Ray ray)
-    {
+    public List<Point> findIntersections(Ray ray) {
         Point P0 = ray.getPoint();
         Vector v = ray.getVector();
 
         Vector n = normal;
 
-        if(q0.equals(P0)){
-            return  null;
+        if (q0.equals(P0)) {
+            return null;
         }
 
         Vector P0_Q0 = q0.subtract(P0);
 
         //numerator
-        double nP0Q0  = alignZero(n.dotProduct(P0_Q0));
+        double nP0Q0 = alignZero(n.dotProduct(P0_Q0));
 
         //
-        if (isZero(nP0Q0 )){
+        if (isZero(nP0Q0)) {
             return null;
         }
 
@@ -121,14 +120,14 @@ public class Plane implements Geometry {
         double nv = alignZero(n.dotProduct(v));
 
         // ray is lying in the plane axis
-        if(isZero(nv)){
+        if (isZero(nv)) {
             return null;
         }
 
-        double  t = alignZero(nP0Q0  / nv);
+        double t = alignZero(nP0Q0 / nv);
 
-        if (t <=0){
-            return  null;
+        if (t <= 0) {
+            return null;
         }
 
         Point point = ray.getPoint(t);
@@ -136,4 +135,43 @@ public class Plane implements Geometry {
         return List.of(point);
     }
 
+
+    public List<Point> findGeoIntersectionsHelper(Ray ray) {
+        Point P0 = ray.getPoint();
+        Vector v = ray.getVector();
+
+        Vector n = normal;
+
+        if (q0.equals(P0)) {
+            return null;
+        }
+
+        Vector P0_Q0 = q0.subtract(P0);
+
+        //numerator
+        double nP0Q0 = alignZero(n.dotProduct(P0_Q0));
+
+        //
+        if (isZero(nP0Q0)) {
+            return null;
+        }
+
+        //denominator
+        double nv = alignZero(n.dotProduct(v));
+
+        // ray is lying in the plane axis
+        if (isZero(nv)) {
+            return null;
+        }
+
+        double t = alignZero(nP0Q0 / nv);
+
+        if (t <= 0) {
+            return null;
+        }
+
+        Point point = ray.getPoint(t);
+
+        return List.of(point);
+    }
 }
