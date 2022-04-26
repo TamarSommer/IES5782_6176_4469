@@ -37,16 +37,28 @@ public class Cylinder extends Tube {
     @Override
     public Vector getNormal(Point p) {
         // TODO Auto-generated method stub
-        return null;
+        Point p0 = this.axisRay.getPoint();
+        Vector v = this.axisRay.getVector();
+        Vector pSUBp0 = p.subtract(p0);
+        double t = v.dotProduct(pSUBp0);
+        if (t == 0) {
+            return v.scale(-1);
+        }
+        if(t == height){
+            return v;
+        }
+        Vector u = this.axisRay.getVector().scale(t);
+        Point o = this.axisRay.getPoint().add(u);
+        return p.subtract(o).normalize();
     }
 
     @Override
     public String toString() {return "Cylinder [height=" + height + "]";
     }
 
-    @Override
-    public List<Point> findIntersections(Ray ray) {
-        return null;
-    }
+    //@Override
+    //public List<Point> findIntersections(Ray ray) {
+     //   return null;
+    //}
 
 }

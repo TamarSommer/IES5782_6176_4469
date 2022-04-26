@@ -7,11 +7,12 @@ import primitives.Ray;
 
 import java.util.List;
 
+import static primitives.Util.alignZero;
 import static primitives.Util.isZero;
 
-public class Plane extends Geometry {
-    Point q0;
-    Vector normal;
+public class Plane implements Geometry {
+    final Point q0;
+    final Vector normal;
 
 
     /*************** ctors *****************/
@@ -22,7 +23,7 @@ public class Plane extends Geometry {
      */
 
     public Plane(Vector normal2,Point q2) {
-        this.normal = normal2;
+        this.normal = normal2.normalize();
         this.q0 = q2;
     }
     /**
@@ -32,10 +33,15 @@ public class Plane extends Geometry {
      * @param p3
      */
     public Plane(Point p1,Point p2,Point p3) {
-        this.q0 = p1;
+        /*this.q0 = p1;
         Vector v1 = (p2.subtract(p3));
         Vector v2 = (p1.subtract(p3));
-        this.normal = v1.crossProduct(v2).normalize();
+        this.normal = v1.crossProduct(v2).normalize();*/
+        q0 = p1;
+        Vector U = (Vector) p2.subtract(p1);
+        Vector V = (Vector) p3.subtract(p1);
+        Vector N = U.crossProduct(V);
+        normal = N.normalize();
     }
     /*************** get *****************/
     /**
@@ -53,7 +59,7 @@ public class Plane extends Geometry {
     @Override
     public Vector getNormal(Point p) {
         /*return new Vector(p.add(normal));*/
-        return this.normal;
+        return getNormal();
     }
 
     /*************** normalize *****************/
@@ -92,29 +98,42 @@ public class Plane extends Geometry {
     @Override
     public List<Point> findIntersections(Ray ray)
     {
-        try {
-            Vector vec=q0.subtract(ray.getPoint());//creating a new vector according to the point q0 and the starting point of the ray (P0)
+        Point P0 = ray.getPoint();
+        Vector v = ray.getVector();
 
-            double t=normal.dotProduct(vec);//dot product between the vector we created and the normal of the plane
+        Vector n = normal;
 
-            if(isZero(normal.dotProduct(ray.getVector()))) //if the dot product equals 0 it means that the ray is parallel to the plane
-                return null;
-            t = t/(normal.dotProduct(ray.getVector()));
-
-            if(t==0) //if the distance between the p0-the start point of the ray and the plane is 0, its not counted in the intersections list
-                return null;//no intersections
-            else if(t > 0) // the ray crosses the plane
-            {
-                Point p=ray.getPoint(t);//get the new point on the ray, multiplied by the scalar t. p is the intersection point.
-                return List.of(new Point(p.dPoint));//if so, return the point- the intersection
-            }
-            else // the ray doesn't cross the plane
-                return null;
+        if(q0.equals(P0)){
+            return  null;
         }
-        catch(Exception ex) //catch exceptions in the vector creation
-        {
+
+        Vector P0_Q0 = q0.subtract(P0);
+
+        //numerator
+        double nP0Q0  = alignZero(n.dotProduct(P0_Q0));
+
+        //
+        if (isZero(nP0Q0 )){
             return null;
         }
+
+        //denominator
+        double nv = alignZero(n.dotProduct(v));
+
+        // ray is lying in the plane axis
+        if(isZero(nv)){
+            return null;
+        }
+
+        double  t = alignZero(nP0Q0  / nv);
+
+        if (t <=0){
+            return  null;
+        }
+
+        Point point = ray.getPoint(t);
+
+        return List.of(point);
     }
 
 }

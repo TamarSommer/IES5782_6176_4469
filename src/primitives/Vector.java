@@ -58,11 +58,19 @@ public Vector(Double3 d) {
      * @return a new vector of the cross product
      */
     public Vector crossProduct(Vector v) {
-        double x = this.dPoint.d2*v.dPoint.d3 - this.dPoint.d3*v.dPoint.d2;
-        double y = this.dPoint.d1*v.dPoint.d3-this.dPoint.d3*v.dPoint.d1;
-        double z = this.dPoint.d1*v.dPoint.d2-this.dPoint.d2*v.dPoint.d1;
-        Vector newv = new Vector(x,-y,z);
-        return newv;
+        double ax = dPoint.d1;
+        double ay = dPoint.d2;
+        double az = dPoint.d3;
+
+        double bx = v.dPoint.d1;
+        double by = v.dPoint.d2;
+        double bz = v.dPoint.d3;
+
+        double cx = ay*bz - az*by;
+        double cy = az*bx - ax*bz;
+        double cz = ax*by - ay*bx;
+
+        return new Vector(cx, cy, cz);
 
     }
     public double lengthSquared() {
@@ -81,9 +89,11 @@ public Vector(Double3 d) {
      * @return a new normalize vector
      */
     public Vector normalize() {
-        double dis = length();
-        Vector newv = new Vector(this.dPoint.d1/dis,this.dPoint.d2/dis,this.dPoint.d3/dis);
-        return newv;
+        //double dis = length();
+       // Vector newv = new Vector(this.dPoint.d1/dis,this.dPoint.d2/dis,this.dPoint.d3/dis);
+       // return newv;
+        double length = length();
+        return new Vector(dPoint.reduce(length));
     }
     /*************** admin *****************/
     @Override

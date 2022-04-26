@@ -16,11 +16,13 @@ public class RayTracerBasic extends RayTracerBase {
 
     @Override
     public Color traceRay(Ray ray) {
-        Point pointAndGeo = findClosestIntersection(ray);
-        if (pointAndGeo != null)                    //if there is an intersection point- calc it's color
-            return calcColor(pointAndGeo, ray);
-        else                            //if the ray doesn't intersect anything- return the background color
-            return scene.backGround;
+        List<Point> intersections = scene.geometries.findIntersections(ray);
+        if (intersections != null) {
+            Point closestPoint = ray.findClosestPoint(intersections);
+            return calcColor(closestPoint);
+        }
+        //ray did not intersect any geometrical object
+        return scene.backGround;
     }
 
     /**
@@ -28,11 +30,13 @@ public class RayTracerBasic extends RayTracerBase {
      * sending level of recursion, and initial mekadem k=1.
      *
      * @param point
-     * @param ray
      * @return
      */
-    private Color calcColor(Point point, Ray ray) {
-        return this.scene.backGround;
+
+
+
+    private Color calcColor(Point point) {
+        return scene.ambientLight.getIntensity();
     }
 
     /**
@@ -42,7 +46,7 @@ public class RayTracerBasic extends RayTracerBase {
      * @param ray
      * @return the closest intersection or null if there aren't.
      */
-    private Point findClosestIntersection(Ray ray) {
+  /*  private Point findClosestIntersection(Ray ray) {
         if (ray == null) {
             return null;
         }
@@ -64,6 +68,6 @@ public class RayTracerBasic extends RayTracerBase {
             }
         }
         return closestPoint;
-    }
+    }*/
 }
 

@@ -5,7 +5,16 @@ import primitives.*;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public abstract class Intersectable {
+
+public interface Intersectable {
+    /** find all intersection points from the array
+     * @param r ray pointing towards graphic object
+     * @return immutable list of intersection points {@link Point}
+     */
+    List<Point> findIntersections(Ray r);
+}
+
+/*public abstract class Intersectable {
     public abstract List<Point> findIntersections(Ray ray){
         List<Intersectable.GeoPoint> geoList = this.findGeoIntersections(ray);
         return geoList == null ? null : (List)geoList.stream().map((gp) -> {
@@ -16,7 +25,7 @@ public abstract class Intersectable {
      * @author Dvori and Tamar
      *
      */
-    public static class GeoPoint {
+    /*public static class GeoPoint {
         public Geometry geometry;
         public Point point;
 
@@ -25,7 +34,7 @@ public abstract class Intersectable {
          * @param geometry
          * @param point
          */
-        public GeoPoint(Geometry geometry, Point point) {
+        /*public GeoPoint(Geometry geometry, Point point) {
             this.geometry = geometry;
             this.point = point;
         }
@@ -60,11 +69,11 @@ public abstract class Intersectable {
 
                 return true;
             }
-        }
-        public abstract List<GeoPoint> findGeoIntersections(Ray ray){this.findGeoIntersectionsHelper(ray);}
-        protected abstract List<GeoPoint> findGeoIntersectionsHelper(Ray ray);
-    }
+        }*/
+        //public abstract List<GeoPoint> findGeoIntersections(Ray ray){this.findGeoIntersectionsHelper(ray);}
+        //protected abstract List<GeoPoint> findGeoIntersectionsHelper(Ray ray);
+   // }
 
 
 
-}
+//}

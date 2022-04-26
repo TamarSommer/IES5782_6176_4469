@@ -17,35 +17,32 @@ public class Triangle extends Polygon {
     @Override
     public List<Point> findIntersections(Ray ray)
     {
-        List<Point> rayPoints = plane.findIntersections(ray);
-        if (rayPoints == null)
+        List<Point> points = plane.findIntersections(ray);
+        if (points == null)
             return null;
-        //for (Point P : rayPoints)
-        //{
-        //P. = this;
-        //}
-        //check if the point in out or on the triangle:
-        Vector v1 = vertices.get(0).subtract(ray.getPoint());
-        Vector v2 = vertices.get(1).subtract(ray.getPoint());
-        Vector v3 = vertices.get(2).subtract(ray.getPoint());
 
-        Vector n1 = v1.crossProduct(v2).normalize();
-        Vector n2 = v2.crossProduct(v3).normalize();
-        Vector n3 = v3.crossProduct(v1).normalize();
+        Point p0 = ray.getPoint();
+        Vector v = ray.getVector();
 
+        Point p1 = vertices.get(0);
+        Point p2 = vertices.get(1);
+        Point p3 = vertices.get(2);
 
-        //The point is inside if all have the same sign (+/-)
+        Vector v1 = p1.subtract(p0); // p0 -> p1
+        Vector v2= p2.subtract(p0);  // p0 -> p2
+        Vector v3= p3.subtract(p0);  // p0 -> p3
 
-        if (Util.alignZero(n1.dotProduct(ray.getVector())) > 0 && Util.alignZero(n2.dotProduct(ray.getVector())) > 0 && Util.alignZero(n3.dotProduct(ray.getVector())) > 0)
-        {
-            return rayPoints;
-        }
-        else if (Util.alignZero(n1.dotProduct(ray.getVector())) < 0 && Util.alignZero(n2.dotProduct(ray.getVector())) < 0 && Util.alignZero(n3.dotProduct(ray.getVector())) < 0)
-        {
-            return rayPoints;
-        }
-        if (Util.isZero(n1.dotProduct(ray.getVector())) || Util.isZero(n2.dotProduct(ray.getVector())) || Util.isZero(n3.dotProduct(ray.getVector())))
-            return null; //there is no instruction point
+        Vector n1 = v1.crossProduct(v2);
+        Vector n2 = v2.crossProduct(v3);
+        Vector n3 = v3.crossProduct(v1);
+
+        double s1 = v.dotProduct(n1);
+        double s2 = v.dotProduct(n2);
+        double s3 = v.dotProduct(n3);
+
+        if((s1>0 && s2>0 && s3>0) ||(s1<0 && s2<0 && s3<0))
+            return points;
+
         return null;
     }
 }

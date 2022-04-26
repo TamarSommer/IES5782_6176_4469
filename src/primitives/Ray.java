@@ -4,6 +4,7 @@ import static primitives.Util.isZero;
 import  primitives.Vector;
 
 import java.util.List;
+import java.util.Objects;
 
 public class Ray {
     Point p;
@@ -36,48 +37,31 @@ public class Ray {
      */
     public Point findClosestPoint(List<Point> points)
     {
-        if (points==null)//if the list is empty
+        if(points== null){
             return null;
+        }
 
-        Point closestP=points.get(0);			//take the 1st point in the beginning
-        double min=p.distance(points.get(0));
+        Point result =null;
+        double closestDistance = Double.MAX_VALUE;
 
-        for(int i=0; i<points.size(); i++) 		//move on all the points
-        {
-            if (p.distance(points.get(i))<min) //change the closest point if the dis < min
-            {
-                min=p.distance(points.get(i));
-                closestP=points.get(i);
+        for (Point p: points) {
+            double temp = p.distance(p);
+            if(temp < closestDistance){
+                closestDistance =temp;
+                result =p;
             }
         }
-        return closestP;					    //return is the closest point-with min distance from p0.
+
+        return  result;
     }
     /*************** Admin *****************/
     @Override
     public boolean equals(Object obj) {
-        if (this == obj) {
-            return true;
-        }
-        if (obj == null) {
-            return false;
-        }
-        if (getClass() != obj.getClass()) {
-            return false;
-        }
-        Ray other = (Ray) obj;
-        if (v == null) {
-            if (other.v != null)
-                return false;
-        } else if (!v.equals(other.v))
-            return false;
-        if (p == null) {
-            if (other.p != null) {
-                return false;
-            }
-        } else if (!p.equals(other.p)) {
-            return false;
-        }
-        return true;
+        if (this == obj) return true;
+        if (obj == null) return false;
+        if (!(obj instanceof Ray)) return false;
+        Ray other = (Ray)obj;
+        return this.v.equals(other.v) && this.p.equals(other.p);
     }
 
     public Point getPoint(double t)
@@ -91,5 +75,8 @@ public class Ray {
     {
         return "Ray [Point=" + p + ", Vector=" +v + "]";
     }
-
+    @Override
+    public int hashCode() {
+        return Objects.hash(p, v);
+    }
 }
