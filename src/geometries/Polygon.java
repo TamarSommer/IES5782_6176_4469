@@ -90,9 +90,10 @@ public class Polygon extends Geometry {
     }
 
 
+
     @Override
-    public List<Point> findIntersections(Ray ray) {
-        List<Point> planeIntersections = plane.findIntersections(ray);
+    public List<GeoPoint> findGeoIntersectionsHelper(Ray ray) {
+        List<GeoPoint> planeIntersections = plane.findGeoIntersectionsHelper(ray);
 
         if (planeIntersections == null) {
             return null;

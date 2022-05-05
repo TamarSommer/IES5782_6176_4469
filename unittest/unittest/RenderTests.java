@@ -25,7 +25,7 @@ public class RenderTests {
 		Scene scene = new Scene("Test scene")//
 				.setAmbientLight(new AmbientLight(new Color(255, 191, 191), //
 						new Double3(1, 1, 1))) //
-				.setBackGround(new Color(75, 127, 90));
+				.setBackground(new Color(75, 127, 90));
 
 		scene.geometries.add(new Sphere(new Point(0, 0, -100), 50d),
 				new Triangle(new Point(-100, 0, -100), new Point(0, 100, -100), new Point(-100, 100, -100)), // up
@@ -38,7 +38,7 @@ public class RenderTests {
 				.setVPDistance(100) //
 				.setVPSize(500, 500) //
 				.setImageWriter(new ImageWriter("base render test", 1000, 1000))
-				.setRayTracerBase(new RayTracerBasic(scene));
+				.setRayTracer(new RayTracerBasic(scene));
 
 		camera.renderImage();
 		camera.printGrid(100, new Color(YELLOW));
@@ -71,12 +71,28 @@ public class RenderTests {
 				.setVPDistance(100) //
 				.setVPSize(500, 500) //
 				.setImageWriter(new ImageWriter("color render test", 1000, 1000))
-				.setRayTracerBase(new RayTracerBasic(scene));
+				.setRayTracer(new RayTracerBasic(scene));
 
 		camera.renderImage();
 		camera.printGrid(100, new Color(WHITE));
 		camera.writeToImage();
 	}
 
+	/**
+	 * Test for XML based scene - for bonus
+	 */
+	@Test
+	public void basicRenderXml() {
+		Scene scene = new Scene("XML Test scene");
+		// enter XML file name and parse from XML file into scene object
+		// ...
 
+		Camera camera = new Camera(Point.ZERO, new Vector(0, 0, -1), new Vector(0, 1, 0)) //
+				.setVPDistance(100) //
+				.setVPSize(500, 500).setImageWriter(new ImageWriter("xml render test", 1000, 1000))
+				.setRayTracer(new RayTracerBasic(scene));
+		camera.renderImage();
+		camera.printGrid(100, new Color(YELLOW));
+		camera.writeToImage();
+	}
 }

@@ -22,6 +22,7 @@ public abstract class Intersectable {
                 : geoList.stream().map(gp -> gp.point).toList();
     }
 
+
     public static class GeoPoint {
         public Geometry geometry;
         public Point point;

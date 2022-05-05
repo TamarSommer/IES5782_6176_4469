@@ -1,6 +1,8 @@
 package primitives;
 
 import static primitives.Util.isZero;
+
+import geometries.Intersectable.*;
 import  primitives.Vector;
 
 import java.util.List;
@@ -35,24 +37,35 @@ public class Ray {
      * @param points
      * @return closestP
      */
-    public Point findClosestPoint(List<Point> points)
+    public Point findClosestPoint(List<Point> points) {
+        return points == null || points.isEmpty() ? null
+                : findClosestGeoPoint(points.stream().map(p -> new GeoPoint(null, p)).toList()).point;
+    }
+
+
+    /**
+     * same as the function "findClosestPoint", but works with GeoPoints.
+     * @param points
+     * @return the GeoPoint in which its point is the closest to p0 of the ray.
+     */
+    public GeoPoint findClosestGeoPoint(List<GeoPoint> points)
     {
-        if(points== null){
+        if (points==null)//if the list is empty
             return null;
-        }
 
-        Point result =null;
-        double closestDistance = Double.MAX_VALUE;
+        GeoPoint closestP=points.get(0);			//take the 1st point in the beginning. point and geometry.
+        double min=p.distance(points.get(0).point);
 
-        for (Point p: points) {
-            double temp = p.distance(p);
-            if(temp < closestDistance){
-                closestDistance =temp;
-                result =p;
+        for(int i=0; i<points.size(); i++) 		//move on all the points
+        {
+            if (p.distance(points.get(i).point)<min) //change the closest point if the dis < min
+            {
+                min=p.distance(points.get(i).point);
+                closestP=points.get(i);
             }
         }
+        return closestP;	//return the closest point(and the geometry it intersects)-with min distance from p0.
 
-        return  result;
     }
     /*************** Admin *****************/
     @Override
