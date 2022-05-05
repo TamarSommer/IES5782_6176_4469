@@ -60,9 +60,7 @@ public class Tube extends Geometry {
         return "Tube [axisRay=" + axisRay + ", radius=" + radius + "]";
     }
     @Override
-    public List<GeoPoint> findIntersectionsHelper(Ray ray) {return  null;}
-    @Override
-    public List<Point> findIntersections(Ray ray) {
+    public List<GeoPoint> findGeoIntersectionsHelper(Ray ray) {
         Vector vAxis = axisRay.getVector();
         Vector v = ray.getVector();
         Point p0 = ray.getPoint();

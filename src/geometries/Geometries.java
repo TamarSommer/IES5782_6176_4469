@@ -30,23 +30,6 @@ public class Geometries extends Intersectable {
 //        _intersectablesList.removeAll(List.of(intersectables));
 //    }
 
-    @Override
-    public List<GeoPoint> findIntersections(Ray ray) {
-        List<GeoPoint> result = null;
-        for (Intersectable item : _intersectablesList) {
-            //get intersections points of a particular item from _intersectables
-            List<GeoPoint> itemPoints = item.findGeoIntersections(ray);
-            if (itemPoints != null) {
-                //first time initialize result to new LinkedList
-                if (result == null) {
-                    result = new LinkedList<>();
-                }
-                //add all item points to the resulting list
-                result.addAll(itemPoints);
-            }
-        }
-        return result;
-    }
 
     public List<GeoPoint> findGeoIntersectionsHelper(Ray ray) {
         List<GeoPoint> result = null;

@@ -1,12 +1,14 @@
 package scene;
 
 import geometries.Geometries;
+import lighting.LightSource;
 import primitives.Color;
 import lighting.AmbientLight;
 import primitives.Double3;
 
 import java.util.Arrays;
 import java.util.LinkedList;
+import java.util.List;
 
 public class Scene {
 
@@ -14,6 +16,7 @@ public class Scene {
     public Color backGround=Color.BLACK;//default color of the background (unless it was changed)
     public AmbientLight ambientLight=new AmbientLight();	//ambient light of the scene's objects
     public Geometries geometries = new Geometries();//the geometries that are in the scene
+    public List<LightSource> lights = new LinkedList<>();
 
     /*************** constructor *****************/
     /**
@@ -53,6 +56,16 @@ public class Scene {
     public Scene setBackGround(Color backGround)
     {
         this.backGround = backGround;
+        return this;
+    }
+
+    /**
+     * setter function to lights  and return this for builder pattern
+     * @param lights the lights to set
+     */
+    public Scene setLights(List<LightSource> lights)
+    {
+        this.lights = lights;
         return this;
     }
 

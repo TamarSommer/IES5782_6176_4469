@@ -9,15 +9,20 @@ public class Triangle extends Polygon {
         super(p1,p2,p3);
     }
 
+//    @Override
+//    public Vector getNormal(Point point) {
+//        return super.getNormal(point);
+//    }
+
     @Override
     public String toString() {
         return super.toString();
     }
 
     @Override
-    public List<Point> findIntersections(Ray ray)
+    public List<GeoPoint> findGeoIntersectionsHelper(Ray ray)
     {
-        List<Point> points = plane.findIntersections(ray);
+        List<GeoPoint> points = plane.findGeoIntersectionsHelper(ray);
         if (points == null)
             return null;
 
