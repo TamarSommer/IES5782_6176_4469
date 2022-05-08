@@ -22,7 +22,6 @@ public abstract class Geometry extends Intersectable {
     public Geometry setEmission(Color emission) {
         this.emission = emission;
         return this;
-
     }
     /**
      * return the normal vector from the shape
@@ -35,7 +34,7 @@ public abstract class Geometry extends Intersectable {
         return material;
     }
 
-    public Geometry SetMaterial(Material m) {
+    public Geometry setMaterial(Material m) {
         material = m;
         return this;
     }

@@ -18,7 +18,7 @@ public class Material {
     /**
      * @param kD the kD to set
      */
-    public Material setKD(double kD)
+    public Material setKd(double kD)
     {
         KD = kD;
         return this;
@@ -27,7 +27,7 @@ public class Material {
     /**
      * @param kS the kS to set
      */
-    public Material setKS(Double3 kS)
+    public Material setKS(Double kS)
     {
         KS = kS;
         return this;

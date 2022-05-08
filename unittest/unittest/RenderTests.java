@@ -1,4 +1,4 @@
-package unittests.renderer;
+package unittest;
 
 import org.junit.jupiter.api.Test;
 
@@ -25,7 +25,7 @@ public class RenderTests {
 		Scene scene = new Scene("Test scene")//
 				.setAmbientLight(new AmbientLight(new Color(255, 191, 191), //
 						new Double3(1, 1, 1))) //
-				.setBackground(new Color(75, 127, 90));
+				.setBackGround(new Color(75, 127, 90));
 
 		scene.geometries.add(new Sphere(new Point(0, 0, -100), 50d),
 				new Triangle(new Point(-100, 0, -100), new Point(0, 100, -100), new Point(-100, 100, -100)), // up

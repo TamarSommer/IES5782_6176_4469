@@ -130,8 +130,10 @@ public class Plane extends Geometry {
             return null;
         }
 
-        Point point = ray.getPoint(t);
 
-        return List.of(point);
+        Point point = ray.getPoint(t);
+        GeoPoint gPoint = new GeoPoint(this,point);
+
+        return List.of(gPoint);
     }
 }

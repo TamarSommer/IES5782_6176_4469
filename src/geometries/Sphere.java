@@ -114,7 +114,8 @@ public class Sphere extends Geometry {
         Vector v = ray.getVector();
 
         if (P0.equals(center)) {
-            return List.of(center.add(v.scale(radius)));
+            GeoPoint gPoint=new GeoPoint(this,center.add(v.scale(radius)));
+            return List.of(gPoint);
         }
 
         Vector u = center.subtract(P0);
@@ -131,19 +132,18 @@ public class Sphere extends Geometry {
         double t2 = alignZero(tm + th);
 
         if (t1 > 0 && t2 > 0) {
-            Point P1 = P0.add(v.scale(t1));
-            Point P2 = P0.add(v.scale(t2));
-            return (List<GeoPoint>) List.of(P1, P2);
+            GeoPoint P1 =new GeoPoint(this, P0.add(v.scale(t1)));
+            GeoPoint P2 =new GeoPoint(this, P0.add(v.scale(t2)));
+            return List.of(P1, P2);
         }
 
         if (t1 > 0) {
-            Point P1 = P0.add(v.scale(t1));
-            return (List<GeoPoint>) List.of(P1);
+            GeoPoint P1 = new GeoPoint(this,P0.add(v.scale(t1)));
+            return List.of(P1);
         }
 
         if (t2 > 0) {
-            Point P2 = P0.add(v.scale(t2));
-
+            GeoPoint P2 = new GeoPoint(this, P0.add(v.scale(t2)));
             return List.of(P2);
         }
 
