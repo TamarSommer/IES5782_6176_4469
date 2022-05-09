@@ -6,41 +6,29 @@ import primitives.Vector;
 
 public class PointLight extends Light implements LightSource{
     private Point position;
-    private double kC = 1,kL = 0,kQ = 0;
+    private double kC,kL,kQ;
 
     /**
      * constructor for light
      *
      * @param intensity
-     * @param position
-     * @param c
-     * @param l++
-     * @param q
      * @return the intensity
      * @author Tamar sommer & Dvory azarkovitz
      */
-    public PointLight(Color intensity, Point position, double c, double l, double q)
-    {
+    protected PointLight(Color intensity, Point p) {
         super(intensity);
-        this.position = position;
-        this.kC = c;
-        this.kL = l;
-        this.kQ = q;
+        position = p;
     }
-
 
 
     @Override
     public Color getIntensity(Point p) {
-        double d = position.distance(p);
-        Color iL = getIntensity().scale((1 / (kC + kL * d + kQ * d * d)));
-        return iL;
+        return null;
     }
 
     @Override
     public Vector getL(Point p) {
-
-        return p.subtract(position).normalize();
+        return null;
     }
     /**
      * setter to filed position
@@ -76,9 +64,9 @@ public class PointLight extends Light implements LightSource{
      * @param kL the kL to set
      * @return the object - builder
      */
-    public PointLight setKL(double kL)
+    public PointLight setKL(double KL)
     {
-        kL = kL;
+        kL = KL;
         return this;
     }
 
@@ -90,9 +78,9 @@ public class PointLight extends Light implements LightSource{
      * @param kQ the kQ to set
      * @return the object - builder
      */
-    public PointLight setKQ(double kQ)
+    public PointLight setKQ(double KQ)
     {
-        kQ = kQ;
+        kQ = KQ;
         return this;
     }
 }

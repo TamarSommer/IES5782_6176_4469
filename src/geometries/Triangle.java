@@ -25,6 +25,10 @@ public class Triangle extends Polygon {
         List<GeoPoint> points = plane.findGeoIntersectionsHelper(ray);
         if (points == null)
             return null;
+        for (GeoPoint geoPoint : points)
+        {
+            geoPoint.geometry = this;
+        }
 
         Point p0 = ray.getPoint();
         Vector v = ray.getVector();

@@ -7,7 +7,7 @@ import java.util.List;
 
 import primitives.Point;
 
-public abstract class Intersectable {
+public abstract class Intersectable{
 
     /**
      * A function that return all the intersection point with geometry

@@ -60,8 +60,8 @@ public class Tube extends Geometry {
         return "Tube [axisRay=" + axisRay + ", radius=" + radius + "]";
     }
     @Override
-    public List<GeoPoint> findGeoIntersectionsHelper(Ray ray) {return  null;
-        /*Vector vAxis = axisRay.getVector();
+    public List<GeoPoint> findGeoIntersectionsHelper(Ray ray) {
+        Vector vAxis = axisRay.getVector();
         Vector v = ray.getVector();
         Point p0 = ray.getPoint();
 
@@ -91,10 +91,10 @@ public class Tube extends Geometry {
             deltaP = p0.subtract(axisRay.getPoint());
         } catch (IllegalArgumentException e1) { // the ray begins at axis P0
             if (vVa == 0) // the ray is orthogonal to Axis
-                return List.of(ray.getPoint(radius));
+                return List.of(new GeoPoint(this,ray.getPoint(radius)));
 
             double t = alignZero(Math.sqrt(radius * radius / vMinusVVaVa.lengthSquared()));
-            return t == 0 ? null : List.of(ray.getPoint(t));
+            return t == 0 ? null : List.of(new GeoPoint(this,ray.getPoint(t)));
         }
 
         double dPVAxis = alignZero(deltaP.dotProduct(vAxis));
@@ -108,7 +108,7 @@ public class Tube extends Geometry {
                 dPMinusdPVaVa = deltaP.subtract(dPVaVa);
             } catch (IllegalArgumentException e1) {
                 double t = alignZero(Math.sqrt(radius * radius / a));
-                return t == 0 ? null : List.of(ray.getPoint(t));
+                return t == 0 ? null : List.of(new GeoPoint(this,ray.getPoint(t)));
             }
         }
 
@@ -133,8 +133,8 @@ public class Tube extends Geometry {
 
         // if both t1 and t2 are positive
         if (t2 > 0)
-            return List.of(ray.getPoint(t1), ray.getPoint(t2));
+            return List.of(new GeoPoint(this,ray.getPoint(t1)),new GeoPoint(this, ray.getPoint(t2)));
         else // t2 is behind the head
-            return List.of(ray.getPoint(t1));*/
+            return List.of(new GeoPoint(this,ray.getPoint(t1)));
     }
 }
