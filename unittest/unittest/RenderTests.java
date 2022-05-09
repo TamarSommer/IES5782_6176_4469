@@ -8,7 +8,7 @@ import primitives.*;
 import renderer.*;
 import scene.Scene;
 import static java.awt.Color.*;
-//fo
+
 /**
  * Test rendering a basic image
  *
