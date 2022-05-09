@@ -3,12 +3,12 @@ package primitives;
 public class Material {
     public int nShininess=0;
     public double KD=0;
-    public double KS=0;
+    public double Ks=0;
 
     /**
      * @param nShininess the nShininess to set
      */
-    public Material setnShininess(int nShininess)
+    public Material setShininess(int nShininess)
     {
         this.nShininess = nShininess;
         return this;
@@ -27,9 +27,9 @@ public class Material {
     /**
      * @param kS the kS to set
      */
-    public Material setKS(Double kS)
+    public Material setKs(Double _kS)
     {
-        KS = kS;
+        Ks = _kS;
         return this;
     }
 }

@@ -14,8 +14,9 @@ public class DirectionalLight extends Light implements LightSource{
      * @return the intensity
      * @author Tamar sommer & Dvory azarkovitz
      */
-    protected DirectionalLight(Color intensity) {
+    public DirectionalLight(Color intensity, Vector v) {
         super(intensity);
+        direction =v;
     }
 
     @Override

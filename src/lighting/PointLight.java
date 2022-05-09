@@ -15,9 +15,11 @@ public class PointLight extends Light implements LightSource{
      * @return the intensity
      * @author Tamar sommer & Dvory azarkovitz
      */
-    protected PointLight(Color intensity) {
+    protected PointLight(Color intensity, Point p) {
         super(intensity);
+        position = p;
     }
+
 
     @Override
     public Color getIntensity(Point p) {
