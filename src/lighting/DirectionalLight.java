@@ -11,20 +11,22 @@ public class DirectionalLight extends Light implements LightSource{
      * constructor for light
      *
      * @param intensity
+     * @param dir
      * @return the intensity
      * @author Tamar sommer & Dvory azarkovitz
      */
-    protected DirectionalLight(Color intensity) {
+    public DirectionalLight(Color intensity, Vector dir) {
         super(intensity);
+        direction = dir.normalize();
     }
 
     @Override
     public Color getIntensity(Point p) {
-        return null;
+        return getIntensity();
     }
 
     @Override
     public Vector getL(Point p) {
-        return null;
+        return direction;
     }
 }

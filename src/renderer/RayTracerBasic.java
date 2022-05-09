@@ -1,10 +1,13 @@
 package renderer;
 
-import primitives.Color;
-import primitives.Point;
-import primitives.Ray;
+
+
 import scene.Scene;
+import primitives.*;
 import geometries.Intersectable.*;
+import lighting.*;
+import primitives.Util.*;
+
 
 
 import java.util.List;
@@ -18,58 +21,87 @@ public class RayTracerBasic extends RayTracerBase {
 
     @Override
     public Color traceRay(Ray ray) {
-        GeoPoint pointAndGeo = findGeoItersectionHelper(ray);
-        if (pointAndGeo != null)                    //if there is an intersection point- calc it's color
-            return calcColor(pointAndGeo, ray);
-        else
-
-            //if the ray doesn't intersect anything- return the background color
+        List<GeoPoint> intersectionsPoints = scene.geometries.findGeoIntersections(ray);
+        if (intersectionsPoints == null)
             return scene.backGround;
+        else
+            return calcColor(ray.findClosestGeoPoint(intersectionsPoints), ray);
     }
-
     /**
-     * outer calcColor that adds ambient light, and call the inner calcColor
-     * sending level of recursion, and initial mekadem k=1.
+     * Calculate the color of a certain point
      *
      * @param point
-     * @return
+     * @return The color of the point (calculated with local effects)
      */
-
-
-
-    private Color calcColor(GeoPoint gPoint) {
-        return scene.ambientLight.getIntensity();
+    public Color calcColor(GeoPoint point, Ray ray) {
+        return scene.ambientLight.getIntensity().add(point.geometry.getEmission()).add(calcLocalEffects(point, ray));
     }
 
     /**
-     * we need this func here ib order to have local findClosestIntersection
-     * without calling the scene's geometries'es findGeoIntersections.... etc.
+     * Calculate the effects of lights
      *
+     * @param intersection
      * @param ray
-     * @return the closest intersection or null if there aren't.
+     * @return The color resulted by local effecrs calculation
      */
-  /*  private Point findClosestIntersection(Ray ray) {
-        if (ray == null) {
-            return null;
-        }
+    private Color calcLocalEffects(GeoPoint intersection, Ray ray) {
+        Vector v = ray.getVector();
+        Vector n = intersection.geometry.getNormal(intersection.point);
+        double nv = primitives.Util.alignZero(n.dotProduct(v));
+        if (nv == 0)
+            return Color.BLACK;
+        int nShininess = intersection.geometry.GetMaterial().nShininess;
 
-        Point closestPoint = null;
-        double closestDistance = Double.MAX_VALUE;
-        Point ray_p0 = ray.getPoint();
-
-        List<Point> intersections = scene.geometries.findIntersections(ray);
-        if (intersections == null)
-            return null;//no intersection
-
-        for (Point point : intersections) //select the closest distance
-        {
-            double distance = ray_p0.distance(point);
-            if (distance < closestDistance) {
-                closestDistance = distance;
-                closestPoint = point;
+        Double3 kd = intersection.geometry.GetMaterial().KD;
+        Double3 ks = intersection.geometry.GetMaterial().KS;
+        Color color = Color.BLACK;
+        for (LightSource lightSource : scene.lights) {
+            Vector l = lightSource.getL(intersection.point);
+            double nl = primitives.Util.alignZero(n.dotProduct(l));
+            if (nl * nv > 0) { // checks if nl == nv
+                Color lightIntensity = lightSource.getIntensity(intersection.point);
+                color = color.add(calcDiffusive(kd, l, n, lightIntensity),
+                        calcSpecular(ks, l, n, v, nShininess, lightIntensity));
             }
         }
-        return closestPoint;
-    }*/
+        return color;
+    }
+
+
+    /**
+     * Calculates diffusive light
+     * @param kd
+     * @param l
+     * @param n
+     * @param lightIntensity
+     * @return The color of diffusive effects
+     */
+    private Color calcDiffusive(Double3 kd, Vector l, Vector n, Color lightIntensity) {
+        double ln = primitives.Util.alignZero(l.dotProduct(n));
+        if (ln < 0)
+            ln = ln * -1;
+        return lightIntensity.scale(kd.scale(ln));
+    }
+
+    /**
+     * Calculate specular light
+     * @param ks
+     * @param l
+     * @param n
+     * @param v
+     * @param nShininess
+     * @param lightIntensity
+     * @return The color of specular reflection
+     */
+    private Color calcSpecular(Double3 ks, Vector l, Vector n, Vector v, int nShininess, Color lightIntensity) {
+        Vector r = l.subtract(n.scale(l.dotProduct(n) * 2));
+        double vr = primitives.Util.alignZero(v.scale(-1).dotProduct(r));
+        if (vr < 0)
+            vr = 0;
+        vr = Math.pow(vr, nShininess);
+        return lightIntensity.scale(ks.scale(vr));
+    }
+
+
 }
 
