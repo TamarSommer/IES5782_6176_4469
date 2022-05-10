@@ -13,7 +13,7 @@ import scene.Scene;
  */
 public class RayTracerBasic extends RayTracerBase {
 
-    private static final double DELTA = 0.1;
+    public static final double DELTA = 0.1;
     private static final int MAX_CALC_COLOR_LEVEL = 10;
     private static final double MIN_CALC_COLOR_K = 0.001;
 
@@ -85,13 +85,12 @@ public class RayTracerBasic extends RayTracerBase {
             Vector l = lightSource.getL(intersection.point);
             double nl = Util.alignZero(n.dotProduct(l));
             if (nl * nv > 0) { // sign(nl) == sing(nv)
-                Double3 ktr = transparency(lightSource, l, n, intersection);
+                //Double3 ktr = transparency(lightSource, l, n, intersection);
                 //if (unshaded(l, n, intersection, lightSource)) {
-                if (!ktr.product(k).lowerThan(MIN_CALC_COLOR_K)) {
-                    Color lightIntensity = lightSource.getIntensity(intersection.point).scale(ktr);
+               // if (!ktr.product(k).lowerThan(MIN_CALC_COLOR_K)) {
+                    Color lightIntensity = lightSource.getIntensity(intersection.point);
                     color = color.add(lightIntensity.scale(((calcDiffusive(kd, nl)).add(calcSpecular(ks, l, n, v, nShininess)))));
-                }
-                //	}
+
             }
         }
         return color;
@@ -133,79 +132,6 @@ public class RayTracerBasic extends RayTracerBase {
         return ks.scale(vrPowed);
     }
 
-    /**
-     * Checks wether the intersection-geoPoint is unshaded regarding one of the light-sources.
-     * @param light the light-source
-     * @param l the light-vector of the light-source
-     * @param n the intersected-geometry's normal
-     * @param geoPoint the intersection-geoPoint
-     * @return If the intersection-geoPoint is unshaded - true, otherwise - false
-
-    //	private boolean unshaded(LightSource light, Vector l, Vector n, GeoPoint geoPoint) {
-    private boolean unshaded(GeoPoint geoPoint, Vector l, Vector n) {
-    Vector lightDirection = l.scale(-1); // from point to light source
-    Ray lightRay = new Ray(geoPoint.point, lightDirection, n);
-    List<GeoPoint> intersections = scene.geometries.findGeoIntersections(lightRay);
-    if (intersections == null)
-    return true;
-    //double lightDistance = light.getDistance(geoPoint.point);
-    for (GeoPoint gp : intersections) {
-    if(Util.alignZero(gp.point.distance(geoPoint.point)-lightDistance)<=0 && isZero(gp.geometry.getMaterial().kT))
-    return false;
-    }
-    return true;
-    }
-     */
-    private boolean unshaded(Vector l, Vector n, GeoPoint geopoint ,LightSource light) {
-        Vector lightDirection = l.scale(-1); // from point to light source
-
-        //Vector epsVector = n.scale(n.dotProduct(lightDirection) > 0 ? DELTA : -DELTA);
-        //Point point = geopoint.point.add(epsVector);
-
-        //	Ray lightRay = new Ray(point, lightDirection);
-        Ray lightRay = new Ray(geopoint.point, lightDirection, n);
-
-        List<GeoPoint> intersections = scene.geometries.findGeoIntersectionsHelper(lightRay);
-        if (intersections == null)
-            return true;
-        double lightDistance = light.getDistance(geopoint.point);
-        for (GeoPoint gp : intersections) {
-            if(Util.alignZero(gp.point.distance(geopoint.point)-lightDistance)<=0 && gp.geometry.getMaterial().kT.equaltTo0())
-                return false;
-        }
-        return true;
-    }
-
-
-
-    /**
-     * Gets the discount-factor of the half or full shading on the intersection-geoPoint regarding one of the light-sources.
-     * @param light the light-source
-     * @param l the light-vector of the light-source
-     * @param n the intersected-geometry's normal
-     * @param geoPoint the intersection-geoPoint
-     * @return The discount-factor of the shading on this intersection-geoPoint
-     */
-    private Double3 transparency(LightSource light, Vector l, Vector n, GeoPoint geoPoint) {
-        Vector lightDirection = l.scale(-1); // from point to light source
-        Ray lightRay = new Ray(geoPoint.point, lightDirection,n);
-        List<GeoPoint> intersections = scene.geometries.findGeoIntersections(lightRay);
-        if (intersections == null)
-            return Double3.ONE;
-        Double3 ktr = Double3.ONE;
-        double lightDistance = light.getDistance(geoPoint.point);
-        for (GeoPoint gp : intersections) {
-            if(Util.alignZero(gp.point.distance(geoPoint.point)-lightDistance)<=0) {
-                ktr= ktr.product(gp.geometry.getMaterial().kT);
-                if (ktr.lowerThan(MIN_CALC_COLOR_K))
-                    return Double3.ZERO;
-            }
-        }
-        return ktr;
-    }
-
-
-
 
     private Color calcColor(GeoPoint geoPoint, Ray ray)
     {
@@ -217,9 +143,9 @@ public class RayTracerBasic extends RayTracerBase {
         {
             return Color.BLACK;
         }
-        Vector v = ray.getDir();
+        Vector v = ray.getVector();
         Color color = Color.BLACK;
-        Double3 kr = gp.geometry.getMaterial().kR;
+        Double3 kr = gp.geometry.getMaterial().KR;
         Double3 kkr = k.product(kr);
 
 
@@ -233,7 +159,7 @@ public class RayTracerBasic extends RayTracerBase {
         }
 
 
-        Double3 kt = gp.geometry.getMaterial().kT;
+        Double3 kt = gp.geometry.getMaterial().KT;
         Double3 kkt = k.product(kt);
 
         if (!kkt.lowerThan(MIN_CALC_COLOR_K)) {
@@ -256,7 +182,7 @@ public class RayTracerBasic extends RayTracerBase {
      * @return the constructed reflected-ray
      */
     private Ray constructReflectedRay(Point point, Ray  ray, Vector n) {
-        Vector v = ray.getDir();
+        Vector v = ray.getVector();
         double vn = Util.alignZero(v.dotProduct(n));
         // if v.dotProduct(n)==0 then the ray we construct is tangent to the geometry:
         if (Util.isZero(vn))
@@ -276,11 +202,6 @@ public class RayTracerBasic extends RayTracerBase {
     private Ray constructRefractedRay(Point point, Vector v, Vector n) {
         return new Ray(point, v, n);
     }
-
-
-
-
-
 
     /**
      * Finds the closest intersection-geoPoint to the starting-point of the given ray.

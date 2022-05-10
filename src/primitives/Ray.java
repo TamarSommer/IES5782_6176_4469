@@ -1,6 +1,7 @@
 package primitives;
 
 import static primitives.Util.isZero;
+import static renderer.RayTracerBasic.DELTA;
 
 import geometries.Intersectable.*;
 import  primitives.Vector;
@@ -28,6 +29,17 @@ public class Ray {
         v = v2.normalize();
     }
 
+    public Ray(Point head, Vector lightDirection, Vector n)
+    {
+        if(primitives.Util.alignZero(lightDirection.dotProduct(n)) < 0)
+            p= head.add(n.scale(-DELTA));
+        else if(primitives.Util.alignZero(lightDirection.dotProduct(n)) > 0)
+            p= head.add(n.scale(DELTA));
+        else if(primitives.Util.isZero(lightDirection.dotProduct(n)))
+            p=head;
+        v=lightDirection;
+        v.normalize();
+    }
 
     public Point getPoint(){return  this.p;}
     public Vector getVector(){return  this.v;}
