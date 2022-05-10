@@ -95,9 +95,9 @@ import java.util.ArrayList;
     private List<Intersectable> geometries; //list of geometries- all implement intersactable interface
 
     /*************** ctors *****************/
-    /**
-     * default ctor- restart new empty arrayList of geometries
-     */
+/**
+ * default ctor- restart new empty arrayList of geometries
+ */
  /*   public Geometries()
     {
         super();
@@ -117,9 +117,9 @@ import java.util.ArrayList;
     }
 
     /*************** add *****************/
-    /**
-     * function that adds new geometries to the list
-     */
+/**
+ * function that adds new geometries to the list
+ */
  /*   public void add(Intersectable...mygeometries)
     {
         for(int i=0;i<mygeometries.length;i++)
@@ -131,11 +131,11 @@ import java.util.ArrayList;
      * @return a list of intersections of the ray with all the geometries in the list. all the composite component.
      * we are using the design pattern of composite- here in one function we collect all the intersections of our geometry shapes by using their own "findInresection" function.
      */
-    /**
-     * @param ray
-     * @return a list of intersections of the ray with all the geometries in the list. all the composite component.
-     * we are using the design pattern of composite- here in one function we collect all the intersections of our geometry shapes by using their own "findInresection" function.
-     */
+/**
+ * @param ray
+ * @return a list of intersections of the ray with all the geometries in the list. all the composite component.
+ * we are using the design pattern of composite- here in one function we collect all the intersections of our geometry shapes by using their own "findInresection" function.
+ */
   /*  @Override
     public List<Point> findIntersections(Ray ray)
     {

@@ -90,8 +90,8 @@ public Vector(Double3 d) {
      */
     public Vector normalize() {
         //double dis = length();
-       // Vector newv = new Vector(this.dPoint.d1/dis,this.dPoint.d2/dis,this.dPoint.d3/dis);
-       // return newv;
+        // Vector newv = new Vector(this.dPoint.d1/dis,this.dPoint.d2/dis,this.dPoint.d3/dis);
+        // return newv;
         double length = length();
         return new Vector(dPoint.reduce(length));
     }

@@ -5,11 +5,11 @@ import primitives.*;
 public interface LightSource {
     /**
      * A function that return the intensity at a point
-	 *
+     *
      * @author Tamar Sommer & dvora azarkovitz
-	 * @param p Point value
-	 * @return intensity color in this point
-	 */
+     * @param p Point value
+     * @return intensity color in this point
+     */
     public Color getIntensity(Point p);
 
 
