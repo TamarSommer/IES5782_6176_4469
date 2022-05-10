@@ -140,7 +140,7 @@ public class Camera {
         return new Ray(_p0, Pij.subtract(_p0));
     }
 
-    public void renderImage() {
+    public Camera renderImage() {
         try {
             if (imageWriter == null) {
                 throw new MissingResourceException("missing resource", ImageWriter.class.getName(), "");
@@ -160,6 +160,7 @@ public class Camera {
         } catch (MissingResourceException e) {
             throw new UnsupportedOperationException("Not implemented yet" + e.getClassName());
         }
+        return this;
     }
 
     private Color castRay(int nX, int nY, int j, int i) {
@@ -186,5 +187,6 @@ public class Camera {
         if (imageWriter == null)
             throw new MissingResourceException("missing resource", ImageWriter.class.getName(), "");
         imageWriter.writeToImage();
+
     }
 }

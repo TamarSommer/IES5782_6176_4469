@@ -40,5 +40,8 @@ public abstract class Geometry extends Intersectable {
         material = m;
         return this;
     }
+    public Material getMaterial() {
+       return material;
+    }
 }
 

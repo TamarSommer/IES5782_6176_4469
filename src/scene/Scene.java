@@ -13,7 +13,7 @@ import java.util.List;
 public class Scene {
 
     public String name;					//scene's name
-    public Color backGround=Color.BLACK;//default color of the background (unless it was changed)
+    public Color background=Color.BLACK;//default color of the background (unless it was changed)
     public AmbientLight ambientLight=new AmbientLight();	//ambient light of the scene's objects
     public Geometries geometries = new Geometries();//the geometries that are in the scene
     public List<LightSource> lights = new LinkedList<>();
@@ -55,7 +55,7 @@ public class Scene {
      */
     public Scene setBackGround(Color backGround)
     {
-        this.backGround = backGround;
+        this.background = backGround;
         return this;
     }
 

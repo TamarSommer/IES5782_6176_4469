@@ -15,7 +15,7 @@ public class PointLight extends Light implements LightSource{
      * @return the intensity
      * @author Tamar sommer & Dvory azarkovitz
      */
-    protected PointLight(Color intensity, Point p) {
+    public PointLight(Color intensity, Point p) {
         super(intensity);
         position = p;
     }
@@ -64,7 +64,7 @@ public class PointLight extends Light implements LightSource{
      * @param kL the kL to set
      * @return the object - builder
      */
-    public PointLight setKL(double KL)
+    public PointLight setKl(double KL)
     {
         kL = KL;
         return this;
