@@ -1,7 +1,6 @@
 package lighting;
 
-import primitives.Color;
-import primitives.Double3;
+import primitives.*;
 
 public class AmbientLight extends Light{
 

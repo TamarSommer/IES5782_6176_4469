@@ -3,6 +3,7 @@ package primitives;
 import static primitives.Util.isZero;
 import static renderer.RayTracerBasic.DELTA;
 
+import geometries.Intersectable;
 import geometries.Intersectable.*;
 import  primitives.Vector;
 
@@ -51,16 +52,32 @@ public class Ray {
      */
     public Point findClosestPoint(List<Point> points) {
         return points == null || points.isEmpty() ? null
-                : findClosestGeoPoint(points.stream().map(p -> new GeoPoint(null, p)).toList()).point;
+                : findClosestGeoPoint(points.stream().map(p -> new Intersectable.GeoPoint(null, p)).toList()).point;
     }
 
-
     /**
+     *
+     * @param geoPoints
+     * @return The closest point to the began of the ray
+     */
+    public Intersectable.GeoPoint findClosestGeoPoint(List<Intersectable.GeoPoint> geoPoints) {
+
+        if (geoPoints == null) //In case of an empty list
+            return null;
+        Intersectable.GeoPoint closePoint = geoPoints.get(0); //Save the first point in the list
+        for (Intersectable.GeoPoint p : geoPoints) {
+            if (closePoint.point.distance(this.p) > p.point.distance(this.p)) //In case the distance of closes point is bigger than the p point
+                closePoint = p;
+        }
+        return closePoint;
+    }
+
+   /* /**
      * same as the function "findClosestPoint", but works with GeoPoints.
      * @param points
      * @return the GeoPoint in which its point is the closest to p0 of the ray.
      */
-    public GeoPoint findClosestGeoPoint(List<GeoPoint> points)
+   /* public GeoPoint findClosestGeoPoint(List<GeoPoint> points)
     {
         if (points==null)//if the list is empty
             return null;
@@ -91,8 +108,12 @@ public class Ray {
 
     public Point getPoint(double t)
     {
-        Point tmp=new Point(p.dPoint.d1 ,p.dPoint.d2,p.dPoint.d3);
-        return isZero(t) ? p : tmp.add(v.scale(t));//takes the beginning of the ray and adds the vector*scalar point that we get.
+        if(isZero(t)){
+            throw new IllegalArgumentException("t is equal to 0 produce an illegal ZERO vector");
+        }
+        return p.add(v.scale(t));
+        //Point tmp=new Point(p.dPoint.d1 ,p.dPoint.d2,p.dPoint.d3);
+        //return isZero(t) ? p : tmp.add(v.scale(t));//takes the beginning of the ray and adds the vector*scalar point that we get.
     }
 
     @Override

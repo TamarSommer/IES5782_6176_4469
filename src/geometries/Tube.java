@@ -11,8 +11,8 @@ import static primitives.Util.alignZero;
 import static primitives.Util.isZero;
 
 public class Tube extends Geometry {
-    Ray axisRay;
-    double radius;
+    protected Ray axisRay;
+    protected double radius;
 /************** ctor *****************/
     /**
      * ctor that gets 2 parameters
@@ -61,7 +61,8 @@ public class Tube extends Geometry {
     }
     @Override
     public List<GeoPoint> findGeoIntersectionsHelper(Ray ray) {
-        Vector vAxis = axisRay.getVector();
+        return  null;
+        /*Vector vAxis = axisRay.getVector();
         Vector v = ray.getVector();
         Point p0 = ray.getPoint();
 
@@ -135,6 +136,6 @@ public class Tube extends Geometry {
         if (t2 > 0)
             return List.of(new GeoPoint(this,ray.getPoint(t1)),new GeoPoint(this, ray.getPoint(t2)));
         else // t2 is behind the head
-            return List.of(new GeoPoint(this,ray.getPoint(t1)));
+            return List.of(new GeoPoint(this,ray.getPoint(t1)));*/
     }
 }

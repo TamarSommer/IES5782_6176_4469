@@ -3,6 +3,8 @@ package lighting;
 import lighting.PointLight;
 import primitives.*;
 
+import static primitives.Util.alignZero;
+
 
 /**
  * spot light- extends point light, but has direction to the light.
@@ -36,9 +38,16 @@ public class SpotLight extends PointLight {
      */
     @Override
     public Color getIntensity(Point p) {
-        double pl = Util.alignZero(direction.dotProduct(getL(p)));
-        if (pl <= 0)
+        Vector l = super.getL(p);
+
+        if (alignZero(direction.dotProduct(l)) <= 0) //In case the dir * l return zero or negative number
             return Color.BLACK;
-        return super.getIntensity(p).scale(pl);
+
+        return super.getIntensity(p).scale(direction.dotProduct(l));
+    }
+
+    @Override
+    public Vector getL(Point p) {
+        return super.getL(p);
     }
 }

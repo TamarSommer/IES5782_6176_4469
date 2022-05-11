@@ -1,9 +1,13 @@
 package renderer;
 
+import geometries.Intersectable;
 import primitives.*;
 
+import java.util.LinkedList;
+import java.util.List;
 import java.util.MissingResourceException;
 
+import static primitives.Util.alignZero;
 import static primitives.Util.isZero;
 
 /**
@@ -92,8 +96,10 @@ public class Camera {
      * @return
      */
     public Camera setVPSize(double width, double height) {
-        _width = width;
-        _height = height;
+        if (width <= 0 || height <= 0)
+            throw new IllegalArgumentException("Width or height cannot be negative!");
+        this._width = width;
+        this._height = height;
         return this;
     }
 
@@ -107,38 +113,7 @@ public class Camera {
         return this;
     }
 
-    /**
-     * Constructing a ray through a pixel
-     *
-     * @param Nx
-     * @param Ny
-     * @param j
-     * @param i
-     * @return ray from the camera to Pixel[i,j]
-     */
-    public Ray constructRay(int Nx, int Ny, int j, int i) {
 
-        // Image center ---> Pc = p0 + distance * vTo
-        Point Pc = _p0.add(_vTo.scale(_distance));
-
-        // Ratio (pixel height & width)
-        double Ry = (double) _height / Ny;
-        double Rx = (double) _width / Nx;
-
-        Point Pij = Pc;
-        double yI = -(i - (Ny - 1) / 2d) * Ry;
-        double xJ = (j - (Nx - 1) / 2d) * Rx;
-
-        // movement to middle of pixel ij
-        if (!isZero(xJ)) {
-            Pij = Pij.add(_vRight.scale(xJ));
-        }
-        if (!isZero(yI)) {
-            Pij = Pij.add(_vUp.scale(yI));
-        }
-        //return ray from camera to view plane ij coordinates
-        return new Ray(_p0, Pij.subtract(_p0));
-    }
 
     public Camera renderImage() {
         try {
@@ -188,5 +163,79 @@ public class Camera {
             throw new MissingResourceException("missing resource", ImageWriter.class.getName(), "");
         imageWriter.writeToImage();
 
+    }
+
+
+    public List<Intersectable.GeoPoint> findRay(int nX, int nY, Intersectable intersect) {
+        Ray ray;
+        List<Intersectable.GeoPoint> result = new LinkedList<>();
+        List<Intersectable.GeoPoint> intersectionPoints;
+
+        for (int i = 0; i < _width; i++) {
+            for (int j = 0; j < _height; j++) {
+                ray = constructRay(nX, nY, i, j);
+                intersectionPoints = intersect.findGeoIntersections(ray) ;
+                if (intersectionPoints != null) {
+                    result.addAll(intersectionPoints);
+                }
+            }
+        }
+        return result.isEmpty() ? null : result;
+    }
+    public Ray constructRay(int nX, int nY, int j, int i) {
+        Vector dir;
+        Point pCenter, pCenterPixel;
+        double ratioY, ratioX, yI, xJ;
+
+        pCenter = _p0.add(_vTo.scale(_distance)); //give us the center of the pixel
+        ratioY = alignZero(_height / nY);
+        ratioX = alignZero(_width / nX);
+
+        pCenterPixel = pCenter;
+        yI = alignZero(-1 * (i - (nY - 1) / 2d) * ratioY);
+        xJ = alignZero((j - (nX - 1) / 2d) * ratioX);
+        if (!isZero(xJ)) {
+            pCenterPixel = pCenterPixel.add(_vRight.scale(xJ));
+        }
+        if (!isZero(yI)) {
+            pCenterPixel = pCenterPixel.add(_vUp.scale(yI));
+        }
+        dir = pCenterPixel.subtract(_p0);
+
+        return new Ray(dir,_p0);
+    }
+    /**
+     * Calculates the ray that goes through the middle of a pixel i,j on the view
+     * plane
+     *
+     * @param nX
+     * @param nY
+     * @param j
+     * @param i
+     * @return The ray that goes through the middle of a pixel i,j on the view plane
+     */
+    public Ray constructRayThroughPixel(int nX, int nY, int j, int i) {
+        // Image center:
+        Point pC = _p0.add(_vTo.scale(this._distance));
+
+        // Ratio:
+        double Ry = _height / nY;
+        double Rx = _width / nX;
+
+        // Pixel[i,j] center
+        double yi = alignZero(-(i - (nY - 1) / 2.0) * Ry);
+        double xj = alignZero((j - (nX - 1) / 2.0) * Rx);
+
+        Point pIJ = pC;
+
+        // To avoid a zero vector exception
+        if (xj != 0)
+            pIJ = pIJ.add(_vRight.scale(xj));
+        if (yi != 0)
+            pIJ = pIJ.add(_vUp.scale(yi));
+
+        Vector vIJ = pIJ.subtract(this._p0);
+
+        return new Ray( vIJ, _p0);
     }
 }

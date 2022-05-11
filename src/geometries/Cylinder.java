@@ -56,9 +56,5 @@ public class Cylinder extends Tube {
     public String toString() {return "Cylinder [height=" + height + "]";
     }
 
-    //@Override
-    //public List<Point> findIntersections(Ray ray) {
-    //   return null;
-    //}
 
 }

@@ -18,34 +18,30 @@ public class Geometries extends Intersectable {
     }
 
     public Geometries(Intersectable... intersectables) {
-        _intersectablesList = new LinkedList<>();
-        Collections.addAll(_intersectablesList, intersectables);
+        _intersectablesList = List.of(intersectables);
     }
 
     public void add(Intersectable... intersectables) {
-        Collections.addAll(_intersectablesList, intersectables);
+        _intersectablesList.addAll(List.of(intersectables));
     }
 
-//    public void remove(Intersectable... intersectables) {
-//        _intersectablesList.removeAll(List.of(intersectables));
-//    }
 
 
     public List<GeoPoint> findGeoIntersectionsHelper(Ray ray) {
-        List<GeoPoint> result = null;
-        for (Intersectable item : _intersectablesList) {
-            //get intersections points of a particular item from _intersectables
-            List<GeoPoint> itemPoints = item.findGeoIntersections(ray);
-            if (itemPoints != null) {
-                //first time initialize result to new LinkedList
-                if (result == null) {
-                    result = new LinkedList<>();
-                }
-                //add all item points to the resulting list
-                result.addAll(itemPoints);
+        if (_intersectablesList.isEmpty()) // In case the collection is empty
+            return null;
+
+        List<GeoPoint> points = null, result;
+        for (Intersectable body: _intersectablesList) {
+            result = body.findGeoIntersectionsHelper(ray);
+            if(result != null){
+                if(points == null)
+                    points = new LinkedList<GeoPoint>(result);
+                else
+                    points.addAll(result);
             }
         }
-        return result;
+        return points;
     }
 }
 

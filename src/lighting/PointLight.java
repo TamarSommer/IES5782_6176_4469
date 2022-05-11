@@ -6,8 +6,8 @@ import primitives.Vector;
 
 public class PointLight extends Light implements LightSource{
     private Point position;
-    private double kC,kL,kQ;
-
+    private double kC = 1,kL=0,kQ=0;
+    private Vector kk = new Vector(1,0,0);
     /**
      * constructor for light
      *
@@ -17,38 +17,18 @@ public class PointLight extends Light implements LightSource{
      */
     public PointLight(Color intensity, Point p) {
         super(intensity);
-        position = p;
+        this.position = p;
     }
 
 
-    @Override
-    public Color getIntensity(Point p) {
-        return null;
-    }
 
-    @Override
-    public Vector getL(Point p) {
-        return null;
-    }
-    /**
-     * setter to filed position
-     *
-     * @author Tamar Sommer & Dvory azarkovitz
-     * @param position the position to set
-     * @return the object - builder
-     */
-    public PointLight setPosition(Point position)
-    {
-        this.position = position;
-        return this;
-    }
 
 
     /**
      * setter to filed kc
      *
      * @author Tamar Sommer & Dvory azarkovitz
-     * @param kC the kC to set
+     * @param KC the kC to set
      * @return the object - builder
      */
     public PointLight setKC(double KC)
@@ -61,7 +41,7 @@ public class PointLight extends Light implements LightSource{
      * setter to filed kl
      *
      * @author Tamar Sommer & Dvory azarkovitz
-     * @param kL the kL to set
+     * @param KL the kL to set
      * @return the object - builder
      */
     public PointLight setKl(double KL)
@@ -75,12 +55,36 @@ public class PointLight extends Light implements LightSource{
      * setter to filed kq
      *
      * @author Tamar Sommer & Dvory azarkovitz
-     * @param kQ the kQ to set
+     * @param KQ the kQ to set
      * @return the object - builder
      */
     public PointLight setKQ(double KQ)
     {
         kQ = KQ;
+        return this;
+    }
+
+    @Override
+    public Color getIntensity(Point p) {
+        double d = position.distance(p);
+        Color iL = getIntensity().scale((1 / (kC + kL * d + kQ * d * d)));
+        return iL;
+    }
+
+    @Override
+    public Vector getL(Point p) {
+        return p.subtract(position).normalize();
+    }
+    /**
+     * setter to filed position
+     *
+     * @author Tamar Sommer & Dvory azarkovitz
+     * @param position the position to set
+     * @return the object - builder
+     */
+    public PointLight setPosition(Point position)
+    {
+        this.position = position;
         return this;
     }
 }

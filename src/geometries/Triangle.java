@@ -2,17 +2,15 @@ package geometries;
 
 import primitives.*;
 
+import java.util.LinkedList;
 import java.util.List;
+
+import static primitives.Util.alignZero;
 
 public class Triangle extends Polygon {
     public Triangle (Point p1,Point p2, Point p3) {
         super(p1,p2,p3);
     }
-
-//    @Override
-//    public Vector getNormal(Point point) {
-//        return super.getNormal(point);
-//    }
 
     @Override
     public String toString() {
@@ -20,38 +18,37 @@ public class Triangle extends Polygon {
     }
 
     @Override
+    public Vector getNormal(Point p){
+        return super.getNormal(p);
+    }
+
+    @Override
     public List<GeoPoint> findGeoIntersectionsHelper(Ray ray)
     {
-        List<GeoPoint> points = plane.findGeoIntersectionsHelper(ray);
-        if (points == null)
+        List<GeoPoint> resultPoint = plane.findGeoIntersectionsHelper(ray);
+
+        if (resultPoint == null) // In case there is no intersection with the plane return null
             return null;
-        for (GeoPoint geoPoint : points)
-        {
-            geoPoint.geometry = this;
-        }
 
-        Point p0 = ray.getPoint();
-        Vector v = ray.getVector();
+        Vector v1 = vertices.get(0).subtract(ray.getPoint());
+        Vector v2 = vertices.get(1).subtract(ray.getPoint());
+        Vector v3 = vertices.get(2).subtract(ray.getPoint());
+        Vector n1 = (v1.crossProduct(v2)).normalize();
+        Vector n2 = (v2.crossProduct(v3)).normalize();
+        Vector n3 = (v3.crossProduct(v1)).normalize();
+        double t1 = alignZero(n1.dotProduct(ray.getVector()));
+        double t2 = alignZero(n2.dotProduct(ray.getVector()));
+        double t3 = alignZero(n3.dotProduct(ray.getVector()));
 
-        Point p1 = vertices.get(0);
-        Point p2 = vertices.get(1);
-        Point p3 = vertices.get(2);
+        if (t1 == 0  || t2 == 0 || t3 == 0) // In case one or more of the scalars equals zero
+            return null; // that mean the point is not inside the triangle
 
-        Vector v1 = p1.subtract(p0); // p0 -> p1
-        Vector v2= p2.subtract(p0);  // p0 -> p2
-        Vector v3= p3.subtract(p0);  // p0 -> p3
+        if ((t1 > 0 && t2 > 0 && t3 > 0) || (t1 < 0 && t2 < 0 && t3 < 0)) { // In case the all scalars are in the same sign, the point is in the triangle
+            LinkedList<GeoPoint> result = new LinkedList<GeoPoint>();
+            result.add(new GeoPoint(this, resultPoint.get(0).point)); //to return this of Triangle
+            return result;
+        } else
+            return null;  //If the scalars are in a different sign
 
-        Vector n1 = v1.crossProduct(v2);
-        Vector n2 = v2.crossProduct(v3);
-        Vector n3 = v3.crossProduct(v1);
-
-        double s1 = v.dotProduct(n1);
-        double s2 = v.dotProduct(n2);
-        double s3 = v.dotProduct(n3);
-
-        if((s1>0 && s2>0 && s3>0) ||(s1<0 && s2<0 && s3<0))
-            return points;
-
-        return null;
     }
 }

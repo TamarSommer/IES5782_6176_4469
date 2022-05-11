@@ -6,6 +6,7 @@ import java.util.List;
 
 import static primitives.Util.alignZero;
 import static primitives.Util.isZero;
+import java.util.LinkedList;
 
 public class Plane extends Geometry {
     final Point q0;
@@ -30,11 +31,6 @@ public class Plane extends Geometry {
      * @param p3
      */
     public Plane(Point p1,Point p2,Point p3) {
-        /*this.q0 = p1;
-        Vector v1 = (p2.subtract(p3));
-        Vector v2 = (p1.subtract(p3));
-        this.normal = v2.crossProduct(v1).normalize();
-        this.normal = v1.crossProduct(v2).normalize();*/
         q0 = p1;
         Vector U = (Vector) p2.subtract(p1);
         Vector V = (Vector) p3.subtract(p1);
@@ -57,7 +53,7 @@ public class Plane extends Geometry {
     @Override
     public Vector getNormal(Point p) {
         /*return new Vector(p.add(normal));*/
-        return getNormal();
+        return normal;
     }
 
     /*************** normalize *****************/
@@ -97,43 +93,19 @@ public class Plane extends Geometry {
 
 
     public List<GeoPoint> findGeoIntersectionsHelper(Ray ray) {
-        Point P0 = ray.getPoint();
-        Vector v = ray.getVector();
 
-        Vector n = normal;
-
-        if (q0.equals(P0)) {
+        if (ray.getPoint().equals(q0) || isZero(this.normal.dotProduct(ray.getVector()))
+                || isZero(this.normal.dotProduct(q0.subtract(ray.getPoint()))))
             return null;
-        }
 
-        Vector P0_Q0 = q0.subtract(P0);
-
-        //numerator
-        double nP0Q0 = alignZero(n.dotProduct(P0_Q0));
-
-        //
-        if (isZero(nP0Q0)) {
+        double t = (this.normal.dotProduct(q0.subtract(ray.getPoint()))) / (this.normal.dotProduct(ray.getVector()));
+        if (t < 0) // In case there is no intersection with the plane return null
             return null;
-        }
 
-        //denominator
-        double nv = alignZero(n.dotProduct(v));
-
-        // ray is lying in the plane axis
-        if (isZero(nv)) {
-            return null;
-        }
-
-        double t = alignZero(nP0Q0 / nv);
-
-        if (t <= 0) {
-            return null;
-        }
-
-
-        Point point = ray.getPoint(t);
-        GeoPoint gPoint = new GeoPoint(this,point);
-
-        return List.of(gPoint);
+        //In case there is intersection with the plane return the point
+        GeoPoint p = new GeoPoint(this, ray.getPoint(t));
+        LinkedList<GeoPoint> result = new LinkedList<GeoPoint>();
+        result.add(p);
+        return result;
     }
 }
