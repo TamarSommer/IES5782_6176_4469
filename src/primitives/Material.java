@@ -5,7 +5,7 @@ public class Material {
     public Double3 KD= new Double3(0);
     public Double3 KS = new Double3(0);
     public Double3 KT= new Double3(0);
-    //public Double3 KR=new Double3(0);
+    public Double3 KR=new Double3(0);
 
     /**
      * @param nShininess the nShininess to set
@@ -51,18 +51,18 @@ public class Material {
         return this;
     }
 
-    /*public Material setKT(double kT)
+    public Material setKT(double kT)
     {
         KT = new Double3(kT);
         return this;
-    }*/
+    }
 
-    /*//**
+    /**
      * @param kR the kR to set
      */
-    /*public Material setKR(double kR)
+    public Material setKR(double kR)
     {
         KR = new Double3(kR);
         return this;
-    }*/
+    }
 }
