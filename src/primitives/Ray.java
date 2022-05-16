@@ -13,6 +13,8 @@ import java.util.Objects;
 public class Ray {
     Point p;
     Vector v;
+
+    private static final double DELTA = 0.1;
     /*************** ctor *****************/
     /**
      * ctor that gets 2 parameteres
@@ -30,7 +32,7 @@ public class Ray {
         v = v2.normalize();
     }
 
-   /* public Ray(Point head, Vector lightDirection, Vector n)
+   public Ray(Point head, Vector lightDirection, Vector n)
     {
          if(primitives.Util.alignZero(lightDirection.dotProduct(n)) < 0)
             p= head.add(n.scale(-DELTA));
@@ -40,8 +42,7 @@ public class Ray {
             p=head;
         v=lightDirection;
         v.normalize();
-    }*/
-
+    }
     public Point getPoint(){
         return  this.p;}
     public Vector getVector(){return  this.v;}

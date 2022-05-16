@@ -4,7 +4,7 @@ public class Material {
     public int nShininess=0;
     public Double3 KD= new Double3(0);
     public Double3 KS = new Double3(0);
-    //public Double3 KT= new Double3(0);
+    public Double3 KT= new Double3(0);
     //public Double3 KR=new Double3(0);
 
     /**

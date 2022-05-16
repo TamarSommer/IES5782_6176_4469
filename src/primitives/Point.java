@@ -3,8 +3,7 @@ package primitives;
 import java.util.Objects;
 
 import static primitives.Util.isZero;
-//point class
-//fuhh
+
 public class Point {
 
 

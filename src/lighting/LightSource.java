@@ -21,4 +21,14 @@ public interface LightSource {
      * @return the lighting direction on a point
      */
     public Vector getL(Point p);
+
+    /**
+     * A function that return the distance between 2 points
+     *
+     * @author Tamar Gavrieli & Odeya Sadoun
+     * @param point Point value
+     * @return double value for the distance
+     * */
+    double getDistance(Point point);
+
 }
