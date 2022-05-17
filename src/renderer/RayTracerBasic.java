@@ -30,72 +30,108 @@ public class RayTracerBasic extends RayTracerBase {
      **/
     @Override
     public Color traceRay(Ray ray) {
-        //	List<GeoPoint> intersections = scene.geometries.findGeoIntersectionsHelper(ray);
-        //if(intersections == null)
-        //return  scene.background;
-        //GeoPoint closestPoint = ray.findClosestGeoPoint(intersections);
         GeoPoint closestPoint = findClosestIntersection(ray);
         return closestPoint == null ? scene.background : calcColor(closestPoint, ray);
     }
 
-    /**
-     * Calculate the color of a certain point
-     *
-     * @param point
-     * @return The color of the point (calculated with local effects)
-     */
-    public Color calcColor(GeoPoint point, Ray ray) {
-        return scene.ambientLight.getIntensity().add(point.geometry.getEmission()).add(calcLocalEffects(point, ray));
+    private Color calcColor(GeoPoint geoPoint, Ray ray)
+    {
+        return calcColor(geoPoint, ray, MAX_CALC_COLOR_LEVEL, new Double3(DELTA)).add(scene.ambientLight.getIntensity());
     }
 
-    private Color calcColor(GeoPoint gp, Ray ray){
-
-    }
     /**
-     * Calculate the effects of lights
+     * Function for calculating a point color
      *
+     * @return Color
+     * */
+    private Color calcColor(GeoPoint intersection, Ray ray, int level, Double3 k) {
+        //Color color = scene.ambientLight.getIntensity();
+        Color color =intersection.geometry.getEmission();
+        color=color.add(calcLocalEffects(intersection, ray, k));
+        return 1 == level ? color : color.add(calcGlobalEffects(intersection, ray, level, k, intersection.geometry.getNormal(intersection.point)));
+    }
+
+    /**
+     * calc the global effects- relection and refraction.
+     * this func call "calcColor" in recursion to add more and more global effects.
      * @param intersection
      * @param ray
-     * @return The color resulted by local effecrs calculation
+     * @param level of recursion- goes down each time till it gets to 1
+     * @param k- mekadem of reflection and refraction so far
+     * @return
      */
-    private Color calcLocalEffects(GeoPoint intersection, Ray ray) {
-        Vector v = ray.getVector();
+    private Color calcGlobalEffects(GeoPoint geopoint, Ray inRay, int level, double k)
+    {
+        Vector n = geopoint.geometry.getNormal(geopoint.point);//normal to geometry in point
+
+        Color color = Color.BLACK;
+        Material material = geopoint.geometry.getMaterial();
+
+        //improve: check the conditions in the beginning
+        if (level == 1 || k < MIN_CALC_COLOR_K) //stop recursion when it gets to the min limit
+        {
+            return color;
+        }
+
+        Double3 kr = material.KR;
+        Double3 kkr = kr.scale(k);
+        if (kkr.lowerThan(MIN_CALC_COLOR_K)) //stop recursion when it gets to the min limit
+        {
+            Ray reflectedRay = constructReflectedRay(geopoint.point, inRay, n);
+            GeoPoint reflectedPoint = findClosestIntersection(reflectedRay);
+            color = color.add(calcColor(reflectedPoint, reflectedRay, level - 1, kkr).scale(kr));
+        }
+        Double3 kt = material.KT;
+        Double3 kkt = kt.scale(k);
+        if (kkt.lowerThan(MIN_CALC_COLOR_K)) //stop recursion when it gets to the min limit
+        {
+            Ray refractedRay = constructRefractedRay(geopoint.point, inRay, n);
+            GeoPoint refractedPoint = findClosestIntersection(refractedRay);
+            color = color.add(calcColor(refractedPoint, refractedRay, level - 1, kkt).scale(kt));
+        }
+        return color;
+    }
+
+
+    private Color calcLocalEffects(GeoPoint intersection, Ray ray, Double3 k) {
+        Vector v = ray.getVector().normalize();
         Vector n = intersection.geometry.getNormal(intersection.point);
-        double nv = alignZero(n.dotProduct(v));
+        double nv = Util.alignZero(n.dotProduct(v));
         if (nv == 0)
             return Color.BLACK;
-        int nShininess = intersection.geometry.getMaterial().nShininess;
-
-        Double3 kd = intersection.geometry.getMaterial().KD;
-        Double3 ks = intersection.geometry.getMaterial().KS;
+        Material material = intersection.geometry.getMaterial();
+        int nShininess = material.nShininess;
+        Double3 kd = material.KD;
+        Double3 ks = material.KS;
         Color color = Color.BLACK;
         for (LightSource lightSource : scene.lights) {
             Vector l = lightSource.getL(intersection.point);
-            double nl = alignZero(n.dotProduct(l));
-            if (nl * nv > 0) { // checks if nl == nv
-                if (unshaded(l,n,intersection, lightSource)){
-                    Color lightIntensity = lightSource.getIntensity(intersection.point);
-                    color = color.add(calcDiffusive(kd, l, n, lightIntensity),
-                          calcSpecular(ks, l, n, v, nShininess, lightIntensity));
+            double nl = Util.alignZero(n.dotProduct(l));
+            if (nl * nv > 0) { // sign(nl) == sing(nv)
+                Double3 ktr = transparency(lightSource, l, n, intersection);
+                //if (unshaded(l, n, intersection, lightSource)) {
+                if (!ktr.product(k).lowerThan(MIN_CALC_COLOR_K)) {
+                    Color lightIntensity = lightSource.getIntensity(intersection.point).scale(ktr);
+                    color = color.add(lightIntensity.scale(((calcDiffusive(kd, nl)).add(calcSpecular(ks, l, n, v, nShininess)))));
                 }
+                //	}
             }
         }
         return color;
     }
 
     /**
-     * Calculates diffusive light
-     * @param kd
-     * @param l
-     * @param n
-     * @param lightIntensity
-     * @return The color of diffusive effects
-     */
-    private Color calcDiffusive(Double3 kd, Vector l, Vector n, Color lightIntensity) {
-        double ln = alignZero(l.dotProduct(n));
-        if (ln < 0)
-            ln = ln * -1;
-        return lightIntensity.scale(kd.scale(ln));
+     * help function that calculate the difusive effect
+     *
+     * @author Tamar Gavrieli & Odeya Sadoun
+     * @param kd double value
+     * @param nl double value
+
+     * @return double value for calcDiffusive
+     * */
+    private double calcDiffusive(double kd, double nl)
+    {
+        return alignZero(Math.abs(nl)*kd);
     }
 
     /**
