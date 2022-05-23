@@ -4,6 +4,7 @@ import geometries.Geometries;
 import lighting.LightSource;
 import primitives.Color;
 import lighting.AmbientLight;
+import primitives.Double3;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -46,6 +47,7 @@ public class Scene {
         this.ambientLight = ambientLight;
         return this;
     }
+
 
     /**
      * @param backGround

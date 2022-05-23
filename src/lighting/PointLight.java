@@ -94,3 +94,4 @@ public class PointLight extends Light implements LightSource{
         return position.distance(point);
     }
 }
+
