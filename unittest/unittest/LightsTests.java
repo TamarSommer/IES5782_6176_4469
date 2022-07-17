@@ -21,7 +21,8 @@ public class LightsTests {
             .setAmbientLight(new AmbientLight(new Color(WHITE), new Double3(0.15)));
     private Camera camera1 = new Camera(new Point(0, 0, 1000), new Vector(0, 0, -1), new Vector(0, 1, 0)) //
             .setVPSize(150, 150) //
-            .setVPDistance(1000);
+            .setVPDistance(1000).
+            setNumOfRays(100);
     private Camera camera2 = new Camera(new Point(0, 0, 1000), new Vector(0, 0, -1), new Vector(0, 1, 0)) //
             .setVPSize(200, 200) //
             .setVPDistance(1000);
@@ -51,9 +52,9 @@ public class LightsTests {
         scene1.geometries.add(sphere);
         scene1.lights.add(new DirectionalLight(spCL, new Vector(1, 1, -0.5)));
 
-        ImageWriter imageWriter = new ImageWriter("lightSphereDirectional", 500, 500);
+        ImageWriter imageWriter = new ImageWriter("lightSphereDirectional2", 500, 500);
         camera1.setImageWriter(imageWriter) //
-                .setRayTracer(new RayTracerBasic(scene1)) //
+                .setRayTracer(new RayTracerBasic(scene1)).setNumOfRays(100) //
                 .renderImage() //
                 .writeToImage(); //
     }

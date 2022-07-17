@@ -2,6 +2,7 @@ package geometries;
 
 import primitives.*;
 
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -22,7 +23,33 @@ public class Triangle extends Polygon {
         return super.getNormal(p);
     }
 
-    @Override
+
+    public List<GeoPoint> findGeoIntersectionsParticular(Ray ray) {
+        List<GeoPoint> rayPoints = this.plane.findGeoIntersectionsParticular(ray);
+        if (rayPoints == null) {
+            return null;
+        } else {
+            GeoPoint P;
+            for(Iterator var4 = rayPoints.iterator(); var4.hasNext(); P.geometry = this) {
+                P = (GeoPoint)var4.next();
+            }
+
+            Vector v1 = ((Point)this.vertices.get(0)).subtract(ray.getPoint());
+            Vector v2 = ((Point)this.vertices.get(1)).subtract(ray.getPoint());
+            Vector v3 = ((Point)this.vertices.get(2)).subtract(ray.getPoint());
+            Vector n1 = v1.crossProduct(v2).normalize();
+            Vector n2 = v2.crossProduct(v3).normalize();
+            Vector n3 = v3.crossProduct(v1).normalize();
+            if (Util.alignZero(n1.dotProduct(ray.getVector())) > 0.0D && Util.alignZero(n2.dotProduct(ray.getVector())) > 0.0D && Util.alignZero(n3.dotProduct(ray.getVector())) > 0.0D) {
+                return rayPoints;
+            } else if (Util.alignZero(n1.dotProduct(ray.getVector())) < 0.0D && Util.alignZero(n2.dotProduct(ray.getVector())) < 0.0D && Util.alignZero(n3.dotProduct(ray.getVector())) < 0.0D) {
+                return rayPoints;
+            } else {
+                return !Util.isZero(n1.dotProduct(ray.getVector())) && !Util.isZero(n2.dotProduct(ray.getVector())) && !Util.isZero(n3.dotProduct(ray.getVector())) ? null : null;
+            }
+        }
+    }
+    /*@Override
     public List<GeoPoint> findGeoIntersectionsHelper(Ray ray)
     {
         List<GeoPoint> resultPoint = plane.findGeoIntersectionsHelper(ray);
@@ -50,5 +77,5 @@ public class Triangle extends Polygon {
         } else
             return null;  //If the scalars are in a different sign
 
-    }
+    }*/
 }

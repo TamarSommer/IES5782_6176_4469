@@ -95,6 +95,22 @@ public Vector(Double3 d) {
         double length = length();
         return new Vector(dPoint.reduce(length));
     }
+
+    /**
+     * Getting a vector which is orthogonal to this vector
+     * @return An orthogonal vector to this vector
+     */
+    public Vector findOrthogonal() {
+        double x = this.dPoint.d1;
+        double y = this.dPoint.d2;
+        double z = this.dPoint.d3;
+        double Ax= Math.abs(x), Ay= Math.abs(y), Az= Math.abs(z);
+        if (Ax < Ay)
+            return Ax < Az ?  new Vector(0, -z, y) : new Vector(-y, x, 0);
+        else
+            return Ay < Az ?  new Vector(z, 0, -x) : new Vector(-y, x, 0);
+    }
+
     /*************** admin *****************/
     @Override
     public boolean equals(Object obj)

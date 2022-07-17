@@ -20,7 +20,7 @@ public class ShadowTest {
     private Intersectable sphere = new Sphere(new Point(0, 0, -200), 60d) //
             .setEmission(new Color(BLUE)) //
             .setMaterial(new Material().setKd(0.5).setKs(0.5).setShininess(30));
-    private Material trMaterial = new Material().setKd(0.5).setKs(0.5).setShininess(30);
+    private Material trMaterial = new Material().setKd(0.5).setKs(0.5).setKT(0.5).setShininess(30);
 
     private Scene scene = new Scene("Test scene");
     private Camera camera = new Camera(new Point(0, 0, 1000), new Vector(0, 0, -1), new Vector(0, 1, 0)) //
@@ -31,7 +31,7 @@ public class ShadowTest {
      * Helper function for the tests in this module
      */
     void sphereTriangleHelper(String pictName, Triangle triangle, Point spotLocation) {
-        scene.geometries.add(sphere, triangle.setEmission(new Color(BLUE)).setMaterial(trMaterial));
+        scene.geometries.add((Borderable) sphere, triangle.setEmission(new Color(BLUE)).setMaterial(trMaterial));
         scene.lights.add( //
                 new SpotLight(new Color(400, 240, 0), spotLocation, new Vector(1, 1, -3)) //
                         .setKl(1E-5).setKQ(1.5E-7));
@@ -108,10 +108,36 @@ public class ShadowTest {
                         .setMaterial(new Material().setKd(0.5).setKs(0.5).setShininess(30)) //
         );
         scene.lights.add( //
-                new SpotLight(new Color(700, 400, 400), new Point(40, 40, 115), new Vector(-1, -1, -4)) //
+                new SpotLight(new Color(700, 400, 400), new Point(40, 40, 115), new Vector(-1, -1, -4),10) //
                         .setKl(4E-4).setKQ(2E-5));
 
-        camera.setImageWriter(new ImageWriter("shadowTrianglesSphere", 600, 600)) //
+        camera.setImageWriter(new ImageWriter("shadowTrianglesSphere3", 600, 600)) //
+                .renderImage() //
+                .writeToImage();
+    }
+
+    /**
+     * Produce a picture of a two triangles lighted by a spot light with a Sphere
+     * producing a shading
+     */
+    @Test
+    public void trianglesSphere2() {
+        scene.setAmbientLight(new AmbientLight(new Color(java.awt.Color.WHITE), new Double3(0.15)));
+
+        scene.geometries.add( //
+                new Triangle(new Point(-150, -150, -115), new Point(150, -150, -135), new Point(75, 75, -150)) //
+                        .setMaterial(new Material().setKs(0.8).setShininess(60)), //
+                new Triangle(new Point(-150, -150, -115), new Point(-70, 70, -140), new Point(75, 75, -150)) //
+                        .setMaterial(new Material().setKs(0.8).setShininess(60)), //
+                new Sphere(new Point(0, 0, -11), 30d) //
+                        .setEmission(new Color(java.awt.Color.BLUE)) //
+                        .setMaterial(new Material().setKd(0.5).setKs(0.5).setShininess(30)) //
+        );
+        scene.lights.add( //
+                new PointLight(new Color(700, 400, 400), new Point(40, 40, 115), 10) //
+                        .setKl(4E-4).setKQ(2E-5));
+
+        camera.setImageWriter(new ImageWriter("softShadowTest", 600, 600)) //
                 .renderImage() //
                 .writeToImage();
     }

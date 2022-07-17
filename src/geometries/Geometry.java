@@ -6,7 +6,7 @@ import primitives.*;
 import primitives.Point;
 import primitives.Vector;
 
-public abstract class Geometry extends Intersectable {
+public abstract class Geometry extends Borderable {
     private Material material= new Material();
     protected Color emission=Color.BLACK;//the own color of the geometry
 
@@ -42,8 +42,11 @@ public abstract class Geometry extends Intersectable {
         return this;
     }
     public Material getMaterial() {
-       return material;
+        return material;
     }
+    public abstract Point getKPointPosition();
+
+
 }
 
 

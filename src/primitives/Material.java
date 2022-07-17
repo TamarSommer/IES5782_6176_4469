@@ -7,6 +7,17 @@ public class Material {
     public Double3 KT= new Double3(0);
     public Double3 KR=new Double3(0);
 
+    public Material(){
+    }
+
+    public Material(double kD,double kS,int nShininess2,double kT,double kR)
+    {
+        KD = new Double3(kD);
+        KS = new Double3(kS);
+        KT = new Double3(kT);
+        KR = new Double3(kR);
+        nShininess = nShininess2;
+    }
     /**
      * @param nShininess the nShininess to set
      */

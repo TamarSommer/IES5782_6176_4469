@@ -28,6 +28,19 @@ public class SpotLight extends PointLight {
         this.direction = direction.normalize();
     }
 
+
+    /**
+     * a new spotlight
+     * @param gridSize the size of the light source
+     * @param color     the color of the light
+     * @param position  the position of the light source
+     * @param direction the direction of the light
+     */
+    public SpotLight(Color color, Point position, Vector direction, double gridSize) {
+        super(color, position,gridSize);
+        this.direction = direction.normalize();
+    }
+
     /* ************* Getters & setters *******/
 
     /**

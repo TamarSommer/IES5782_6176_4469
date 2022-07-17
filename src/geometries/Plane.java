@@ -90,9 +90,32 @@ public class Plane extends Geometry {
      * @return a list of GeoPoints- intersections of the ray with the plane, and this plane
      */
 
+    public List<GeoPoint> findGeoIntersectionsParticular(Ray ray) throws IllegalArgumentException {
+        double nv = this.normal.dotProduct(ray.getVector());
+        if (Util.isZero(nv)) {
+            return null;
+        } else {
+            try {
+                Vector pSubtractP0 = this.q0.subtract(ray.getPoint());
+                double t = Util.alignZero(this.normal.dotProduct(pSubtractP0) / nv);
+                return t <= 0.0D ? null : List.of(new GeoPoint(this, ray.getPoint(t)));
+            } catch (Exception var7) {
+                return null;
+            }
+        }
+    }
 
+    protected void findMinMaxParticular() {
+        this.minX = -1.0D / 0.0;
+        this.minY = -1.0D / 0.0;
+        this.minZ = -1.0D / 0.0;
+        this.maxX = 1.0D / 0.0;
+        this.maxY = 1.0D / 0.0;
+        this.maxZ = 1.0D / 0.0;
+    }
+    public Point getKPointPosition() {return this.q0;}
 
-    public List<GeoPoint> findGeoIntersectionsHelper(Ray ray) {
+   /* public List<GeoPoint> findGeoIntersectionsHelper(Ray ray) {
 
         if (ray.getPoint().equals(q0) || isZero(this.normal.dotProduct(ray.getVector()))
                 || isZero(this.normal.dotProduct(q0.subtract(ray.getPoint()))))
@@ -107,5 +130,5 @@ public class Plane extends Geometry {
         LinkedList<GeoPoint> result = new LinkedList<GeoPoint>();
         result.add(p);
         return result;
-    }
+    }*/
 }

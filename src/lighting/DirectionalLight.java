@@ -32,4 +32,9 @@ public class DirectionalLight extends Light implements LightSource{
     {
         return Double.POSITIVE_INFINITY;
     }
+
+    @Override
+    public double getGridSize() {
+        return 0;
+    }
 }

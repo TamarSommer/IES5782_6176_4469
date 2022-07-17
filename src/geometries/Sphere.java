@@ -66,50 +66,8 @@ public class Sphere extends Geometry {
      * @param ray
      * @return a list of GeoPoints- intersections of the ray with the sphere, and this sphere
      */
- /*   @Override
-    public List<Point> findIntersections(Ray ray)
-    {
-        Point P0 = ray.getPoint();
-        Vector v = ray.getVector();
-
-        if (P0.equals(center)) {
-            return List.of(center.add(v.scale(radius)));
-        }
-
-        Vector u = center.subtract(P0);
-        double tm = alignZero(v.dotProduct(u));
-        double d = alignZero(Math.sqrt(u.lengthSquared() - tm * tm));
-
-        // no intersections : the ray direction is above the sphere
-        if (d >= radius) {
-            return null;
-        }
-
-        double th = alignZero(Math.sqrt(radius * radius - d * d));
-        double t1 = alignZero(tm - th);
-        double t2 = alignZero(tm + th);
-
-        if (t1 > 0 && t2 > 0) {
-            Point P1 = P0.add(v.scale(t1));
-            Point P2 = P0.add(v.scale(t2));
-            return List.of(P1, P2);
-        }
-
-        if (t1 > 0) {
-            Point P1 = P0.add(v.scale(t1));
-            return List.of(P1);
-        }
-
-        if (t2 > 0) {
-            Point P2 = P0.add(v.scale(t2));
-            return List.of(P2);
-        }
-
-        return null;
-
-    }*/
-    @Override
-    public List<GeoPoint> findGeoIntersectionsHelper(Ray ray)
+    //@Override
+    /*public List<GeoPoint> findGeoIntersectionsHelper(Ray ray)
     {
         double r = this.radius;
 
@@ -148,6 +106,41 @@ public class Sphere extends Geometry {
             return null;
         }
 
+    }*/
+    public List<GeoPoint> findGeoIntersectionsParticular(Ray ray) {
+        if (ray.getPoint().equals(this.center)) {
+            return List.of(new GeoPoint(this, ray.getPoint(this.radius)));
+        } else {
+            Vector u = this.center.subtract(ray.getPoint());
+            double tM = Util.alignZero(ray.getVector().dotProduct(u));
+            double d = Util.alignZero(Math.sqrt(u.length() * u.length() - tM * tM));
+            double tH = Util.alignZero(Math.sqrt(this.radius * this.radius - d * d));
+            double t1 = Util.alignZero(tM + tH);
+            double t2 = Util.alignZero(tM - tH);
+            if (d > this.radius) {
+                return null;
+            } else if (t1 <= 0.0D && t2 <= 0.0D) {
+                return null;
+            } else if (t1 > 0.0D && t2 > 0.0D) {
+                return List.of(new GeoPoint(this, ray.getPoint(t1)), new GeoPoint(this, ray.getPoint(t2)));
+            } else {
+                return t1 > 0.0D ? List.of(new GeoPoint(this, ray.getPoint(t1))) : List.of(new GeoPoint(this, ray.getPoint(t2)));
+            }
+        }
     }
+
+    protected void findMinMaxParticular() {
+        this.minX = this.center.getD1() - this.radius;
+        this.maxX = this.center.getD1()+ this.radius;
+        this.minY = this.center.getD2() - this.radius;
+        this.maxY = this.center.getD2()+ this.radius;
+        this.minZ = this.center.getD3()- this.radius;
+        this.maxZ = this.center.getD3() + this.radius;
+    }
+
+    public Point getKPointPosition() {
+        return this.center;
+    }
+
 
 }
